@@ -87,7 +87,7 @@ export class Checkout {
   }
 
   applyCoupon(): void {
-    const result = this.couponService.validate(this.couponInput(), this.cartService.subtotal(), this.isExclusiveMember());
+    const result = this.couponService.validate(this.couponInput(), this.cartService.subtotal());
     if (result.valid && result.coupon) {
       this.appliedCoupon.set(result.coupon);
       this.couponMessage.set({ type: 'success', text: result.message });
@@ -95,6 +95,7 @@ export class Checkout {
     } else {
       this.appliedCoupon.set(null);
       this.couponMessage.set({ type: 'error', text: result.message });
+      this.toastService.error(result.message);
     }
   }
 
@@ -133,6 +134,7 @@ export class Checkout {
       });
 
       this.finishedOrder.set(order);
+      this.authService.markFirstPurchaseDone();
       this.step.set(3);
       this.cartService.clear();
       this.submitting.set(false);

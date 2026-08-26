@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CouponService } from '../../core/services/coupon.service';
+import { DrawService } from '../../core/services/draw.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 
@@ -11,16 +11,25 @@ import { ToastService } from '../../core/services/toast.service';
   styleUrl: './cupons.scss',
 })
 export class Cupons {
-  private couponService = inject(CouponService);
+  drawService = inject(DrawService);
   authService = inject(AuthService);
   private toastService = inject(ToastService);
 
-  normalCoupons = this.couponService.getByType('normal');
-  exclusiveCoupons = this.couponService.getByType('exclusivo');
   copied = signal<string | null>(null);
+  participating = signal<string | null>(null);
 
-  get isExclusiveMember(): boolean {
-    return this.authService.currentUser()?.exclusiveMember ?? false;
+  get isFirstPurchaseAvailable(): boolean {
+    return !(this.authService.currentUser()?.hasMadeFirstPurchase);
+  }
+
+  get userWonCoupons(): string[] {
+    return this.authService.currentUser()?.wonCoupons || [];
+  }
+
+  async participate(drawId: string): Promise<void> {
+    this.participating.set(drawId);
+    const res = await this.drawService.participateInDraw(drawId);
+    this.participating.set(null);
   }
 
   copyCode(code: string): void {
@@ -28,7 +37,7 @@ export class Cupons {
       navigator.clipboard.writeText(code).catch(() => {});
     }
     this.copied.set(code);
-    this.toastService.success(`Cupom ${code} copiado!`);
+    this.toastService.success(`Cupom ${code} copiado com sucesso!`);
     setTimeout(() => this.copied.set(null), 2000);
   }
 }

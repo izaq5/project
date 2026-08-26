@@ -1,66 +1,119 @@
-import { Injectable } from '@angular/core';
-import { Coupon, CouponType, CouponValidationResult } from '../models/coupon.model';
+import { Injectable, inject } from '@angular/core';
+import { Coupon, CouponValidationResult } from '../models/coupon.model';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class CouponService {
-  private readonly coupons: Coupon[] = [
+  private auth = inject(AuthService);
+
+  private readonly standardCoupons: Coupon[] = [
     {
-      code: 'BEMVINDO10',
-      type: 'normal',
+      code: 'PRIMEIRA10',
+      type: 'first_purchase',
       discountPercent: 10,
-      description: '10% de desconto para novos clientes em qualquer compra.',
+      description: '10% de desconto automático na sua 1ª compra',
+      isFirstPurchaseOnly: true
     },
     {
-      code: 'PREMIUM15',
-      type: 'normal',
+      code: 'CAPUTE15',
+      type: 'standard',
       discountPercent: 15,
-      description: '15% de desconto em toda a loja acima de R$ 100.',
-      minValue: 100,
+      description: '15% de desconto para compras acima de R$ 150',
+      minValue: 150
     },
     {
-      code: 'NEXUSVIP',
-      type: 'exclusivo',
-      discountPercent: 25,
-      description: '25% OFF exclusivo para membros Nexus VIP acima de R$ 150.',
-      minValue: 150,
-    },
-    {
-      code: 'BLACK30',
-      type: 'exclusivo',
-      discountPercent: 30,
-      description: '30% OFF exclusivo — oferta especial para membros Nexus VIP acima de R$ 200.',
-      minValue: 200,
-    },
+      code: 'CAPUTE20',
+      type: 'standard',
+      discountPercent: 20,
+      description: '20% de desconto especial CaputeStore acima de R$ 300',
+      minValue: 300
+    }
   ];
 
-  getAll(): Coupon[] {
-    return this.coupons;
-  }
+  validate(code: string, subtotal: number): CouponValidationResult {
+    const cleanCode = (code || '').trim().toUpperCase();
+    const user = this.auth.currentUser();
 
-  getByType(type: CouponType): Coupon[] {
-    return this.coupons.filter((c) => c.type === type);
-  }
-
-  validate(code: string, subtotal: number, isExclusiveMember: boolean): CouponValidationResult {
-    const found = this.coupons.find((c) => c.code.toLowerCase() === code.trim().toLowerCase());
-
-    if (!code.trim()) {
-      return { valid: false, message: 'Digite um cupom de desconto.' };
+    if (!cleanCode) {
+      return { valid: false, message: 'Digite um código de cupom.' };
     }
+
+    // 1. Regra de Negócio: Cupom de Primeira Compra (10%)
+    if (cleanCode === 'PRIMEIRA10' || cleanCode === 'BEMVINDO10') {
+      if (user?.hasMadeFirstPurchase) {
+        return {
+          valid: false,
+          message: '❌ Este cupom de 10% é válido EXCLUSIVAMENTE para a PRIMEIRA compra do cliente. Você já possui compras registradas em sua conta.'
+        };
+      }
+      return {
+        valid: true,
+        discountPercent: 10,
+        coupon: {
+          code: cleanCode,
+          type: 'first_purchase',
+          discountPercent: 10,
+          description: '10% OFF na Primeira Compra'
+        },
+        message: '✅ Cupom de 10% de Primeira Compra aplicado com sucesso!'
+      };
+    }
+
+    // 2. Regra: Cupons Individuais de Sorteios (15%, 25%, 30%)
+    if (cleanCode.includes('OFF-CAPUTE-') || cleanCode.includes('PREMIUM')) {
+      const wonList = user?.wonCoupons || [];
+      const hasWonThisCode = wonList.some(c => c.toUpperCase() === cleanCode);
+
+      if (!hasWonThisCode && !cleanCode.startsWith('CAPUTE')) {
+        return {
+          valid: false,
+          message: '❌ Este cupom de sorteio pertence a outro participante contemplado ou ainda não foi sorteado.'
+        };
+      }
+
+      // Se for cupom de 25% ou 30% Premium, exige status Premium/VIP
+      if ((cleanCode.includes('25') || cleanCode.includes('30')) && !user?.isPremium && !user?.isVip) {
+        return {
+          valid: false,
+          message: '🔒 Este cupom é EXCLUSIVO para membros Premium ou VIP CaputeStore.'
+        };
+      }
+
+      let discount = 15;
+      if (cleanCode.includes('25')) discount = 25;
+      if (cleanCode.includes('30')) discount = 30;
+
+      return {
+        valid: true,
+        discountPercent: discount,
+        coupon: {
+          code: cleanCode,
+          type: discount > 15 ? 'raffle_25_premium' : 'raffle_15',
+          discountPercent: discount,
+          description: `Cupom de ${discount}% OFF de Sorteio`
+        },
+        message: `✅ Cupom de Sorteio de ${discount}% OFF aplicado com sucesso!`
+      };
+    }
+
+    // 3. Cupons Padrão da Loja
+    const found = this.standardCoupons.find(c => c.code.toUpperCase() === cleanCode);
     if (!found) {
-      return { valid: false, message: 'Cupom inválido ou expirado.' };
+      return { valid: false, message: '❌ Cupom inválido ou não encontrado.' };
     }
-    if (found.type === 'exclusivo' && !isExclusiveMember) {
-      return { valid: false, message: 'Este cupom é exclusivo para membros Nexus VIP. Cadastre-se para desbloquear.' };
-    }
+
     if (found.minValue && subtotal < found.minValue) {
-      return { valid: false, message: `Valor mínimo de R$ ${found.minValue.toFixed(2).replace('.', ',')} para usar este cupom.` };
+      return {
+        valid: false,
+        message: `⚠️ Este cupom exige valor mínimo de R$ ${found.minValue.toFixed(2).replace('.', ',')}.`
+      };
     }
 
     return {
       valid: true,
+      discountPercent: found.discountPercent,
       coupon: found,
-      message: `Cupom aplicado com sucesso! ${found.discountPercent}% de desconto aplicado.`,
+      message: `✅ Cupom ${found.code} de ${found.discountPercent}% aplicado com sucesso!`
     };
   }
 }

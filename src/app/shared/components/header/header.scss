@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: var(--bg-soft);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -16,43 +16,57 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   flex-shrink: 0;
 
-  .logo-bolt { font-size: 1.3rem; }
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--surface-2);
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .cart-c {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+  }
+
+  .logo-text-wrap {
+    display: flex;
+    flex-direction: column;
+  }
 
   .logo-text {
     font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 1.3rem;
+    font-weight: 900;
+    font-size: 1.35rem;
     color: var(--text);
-    letter-spacing: -.02em;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
   }
 
   .logo-tag {
-    font-size: .55rem;
+    font-size: .52rem;
     font-weight: 700;
-    letter-spacing: .12em;
-    color: var(--text-faint);
-    border-left: 1px solid var(--border-light);
-    padding-left: 8px;
-    margin-left: 2px;
-    align-self: flex-end;
-    margin-bottom: 4px;
-    display: none;
+    letter-spacing: .08em;
+    color: var(--text-muted);
   }
-
-  @media (min-width: 640px) { .logo-tag { display: inline; } }
 }
 
 .search {
   flex: 1;
-  max-width: 560px;
+  max-width: 500px;
   display: flex;
   align-items: center;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   overflow: hidden;
   transition: border-color .2s ease;
 
@@ -64,21 +78,21 @@
     border: none;
     outline: none;
     color: var(--text);
-    padding: 11px 14px;
+    padding: 11px 16px;
     font-size: .9rem;
 
     &::placeholder { color: var(--text-faint); }
   }
 
-  button {
-    background: transparent;
+  .search-btn {
+    background: var(--primary);
     border: none;
-    color: var(--text-muted);
-    padding: 0 16px;
-    height: 100%;
+    color: var(--on-primary);
+    padding: 0 18px;
+    height: 42px;
     font-size: 1rem;
 
-    &:hover { color: var(--primary); }
+    &:hover { background: var(--primary-light); }
   }
   
   @media (max-width: 900px) { display: none; }
@@ -87,9 +101,14 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
   margin-left: auto;
   flex-shrink: 0;
+}
+
+.vip-pill {
+  display: none;
+  @media (min-width: 768px) { display: inline-flex; }
 }
 
 .action-item {
@@ -111,11 +130,11 @@
   gap: 8px;
 }
 
-.action-icon { font-size: 1.25rem; color: var(--text); }
+.action-icon, .user-icon { font-size: 1.2rem; color: var(--text); }
 
 .mini-avatar {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--primary);
   color: var(--on-primary);
@@ -127,6 +146,12 @@
   flex-shrink: 0;
   overflow: hidden;
 
+  &.vip-avatar {
+    border: 2px solid var(--primary);
+    background: var(--vip-gradient);
+    color: #fff;
+  }
+
   img { width: 100%; height: 100%; object-fit: cover; }
 }
 
@@ -135,27 +160,24 @@
   flex-direction: column;
   line-height: 1.15;
 
-  .label-top { font-size: .7rem; color: var(--text-faint); }
-  .label-bottom { font-size: .82rem; font-weight: 700; color: var(--text); }
+  .label-top { font-size: .68rem; color: var(--text-muted); }
+  .label-bottom { font-size: .8rem; font-weight: 700; color: var(--text); }
 
   @media (min-width: 900px) { display: flex; }
 }
 
-/* No menu do usuário, o texto "Meu Perfil" fica sempre visível (mesmo em telas pequenas) */
 .user-menu .action-label { display: flex; }
 
-.cart-action { position: relative; }
-
-.cart-badge {
+.cart-badge, .fav-badge {
   position: absolute;
-  top: 2px;
-  left: 22px;
+  top: 0;
+  right: -2px;
   background: var(--primary);
   color: var(--on-primary);
   font-size: .65rem;
-  font-weight: 800;
-  min-width: 17px;
-  height: 17px;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -169,10 +191,10 @@
   top: calc(100% + 8px);
   right: 0;
   background: var(--surface);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
-  min-width: 180px;
+  min-width: 200px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -184,14 +206,14 @@
   display: block;
   width: 100%;
   text-align: left;
-  padding: 9px 10px;
+  padding: 9px 12px;
   border-radius: 6px;
   font-size: .85rem;
   color: var(--text);
   background: none;
   border: none;
 
-  &:hover { background: var(--surface-hover); }
+  &:hover { background: var(--surface-hover); color: var(--primary); }
 }
 
 .dropdown-badge { margin: 4px 10px; align-self: flex-start; }
@@ -209,7 +231,7 @@
 }
 
 .header-nav {
-  background: var(--bg);
+  background: #08080a;
   border-top: 1px solid var(--border);
 
   @media (max-width: 900px) {
@@ -221,8 +243,7 @@
 .header-nav__inner {
   display: flex;
   align-items: center;
-  justify-content: center;  
-  gap: 28px;
+  gap: 24px;
   height: 48px;
   overflow-x: auto;
 
@@ -234,15 +255,30 @@
     gap: 14px;
   }
 
+  .cat-btn {
+    font-weight: 800;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    &:hover { background: var(--primary); color: var(--on-primary); }
+  }
+
   a {
     font-size: .85rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-muted);
     white-space: nowrap;
+    letter-spacing: 0.03em;
     padding: 4px 0;
     border-bottom: 2px solid transparent;
     transition: color .2s ease, border-color .2s ease;
 
     &:hover, &.active { color: var(--primary); border-color: var(--primary); }
+  }
+
+  .nav-vip-link {
+    color: var(--vip-1);
+    &:hover { color: var(--vip-2); border-color: var(--vip-2); }
   }
 }

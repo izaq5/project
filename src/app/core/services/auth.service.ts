@@ -1,8 +1,8 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { StoredUser, User } from '../models/user.model';
 
-const CURRENT_USER_KEY = 'nexus_current_user';
-const USERS_KEY = 'nexus_users';
+const CURRENT_USER_KEY = 'capute_current_user';
+const USERS_KEY = 'capute_users';
 
 export interface RegisterPayload {
   name: string;
@@ -22,6 +22,8 @@ export class AuthService {
   private readonly _currentUser = signal<User | null>(this.loadCurrentUser());
   readonly currentUser = this._currentUser.asReadonly();
   readonly isLoggedIn = computed(() => this._currentUser() !== null);
+  readonly isVip = computed(() => this._currentUser()?.isVip ?? false);
+  readonly isPremium = computed(() => (this._currentUser()?.isPremium || this._currentUser()?.isVip) ?? false);
 
   private users: StoredUser[] = this.loadUsers();
 
@@ -39,6 +41,10 @@ export class AuthService {
       email: data.email.trim(),
       phone: data.phone?.trim(),
       exclusiveMember: data.exclusiveMember,
+      isVip: data.exclusiveMember,
+      isPremium: data.exclusiveMember,
+      hasMadeFirstPurchase: false,
+      wonCoupons: [],
       createdAt: new Date().toISOString(),
       password: data.password,
     };
@@ -47,13 +53,27 @@ export class AuthService {
     this.persistUsers();
     this.setCurrentUser(newUser);
 
-    return { success: true, message: 'Cadastro realizado com sucesso! Bem-vindo(a) à Nexus Store.' };
+    return { success: true, message: 'Cadastro realizado com sucesso! Bem-vindo(a) à CaputeStore.' };
   }
 
-  login(email: string, password: string): AuthResult {
-    const found = this.users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password);
+  login(email: string, password?: string): AuthResult {
+    let found = this.users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
     if (!found) {
-      return { success: false, message: 'E-mail ou senha inválidos.' };
+      // Auto-create demo user
+      found = {
+        id: this.generateId(),
+        name: email.split('@')[0] || 'Cliente Capute',
+        email: email.trim(),
+        exclusiveMember: false,
+        isVip: false,
+        isPremium: false,
+        hasMadeFirstPurchase: false,
+        wonCoupons: [],
+        createdAt: new Date().toISOString(),
+        password: password || '123456'
+      };
+      this.users.push(found);
+      this.persistUsers();
     }
     this.setCurrentUser(found);
     return { success: true, message: `Bem-vindo(a) de volta, ${found.name.split(' ')[0]}!` };
@@ -67,9 +87,54 @@ export class AuthService {
   updateExclusiveMember(value: boolean): void {
     const current = this._currentUser();
     if (!current) return;
-    const updated: User = { ...current, exclusiveMember: value };
+    const updated: User = { ...current, exclusiveMember: value, isVip: value, isPremium: value };
     this._currentUser.set(updated);
-    this.users = this.users.map((u) => (u.id === updated.id ? { ...u, exclusiveMember: value } : u));
+    this.users = this.users.map((u) => (u.id === updated.id ? { ...u, exclusiveMember: value, isVip: value, isPremium: value } : u));
+    this.persistUsers();
+    this.persistCurrentUser(updated);
+  }
+
+  becomeVip(): AuthResult {
+    const current = this._currentUser();
+    if (!current) {
+      return { success: false, message: 'Você precisa estar conectado para assinar o Plano VIP.' };
+    }
+
+    const updated: User = {
+      ...current,
+      isVip: true,
+      isPremium: true,
+      exclusiveMember: true
+    };
+
+    this._currentUser.set(updated);
+    this.users = this.users.map((u) => (u.id === updated.id ? { ...u, isVip: true, isPremium: true, exclusiveMember: true } : u));
+    this.persistUsers();
+    this.persistCurrentUser(updated);
+
+    return {
+      success: true,
+      message: 'Parabéns! Seu Plano VIP (R$ 20,00) foi ativado com sucesso! Você agora tem acesso exclusivo ao Grupo do WhatsApp, parcerias e sorteios.'
+    };
+  }
+
+  markFirstPurchaseDone(): void {
+    const current = this._currentUser();
+    if (!current) return;
+    const updated: User = { ...current, hasMadeFirstPurchase: true };
+    this._currentUser.set(updated);
+    this.users = this.users.map((u) => (u.id === updated.id ? { ...u, hasMadeFirstPurchase: true } : u));
+    this.persistUsers();
+    this.persistCurrentUser(updated);
+  }
+
+  addWonCoupon(couponCode: string): void {
+    const current = this._currentUser();
+    if (!current) return;
+    const list = [...(current.wonCoupons || []), couponCode];
+    const updated: User = { ...current, wonCoupons: list };
+    this._currentUser.set(updated);
+    this.users = this.users.map((u) => (u.id === updated.id ? { ...u, wonCoupons: list } : u));
     this.persistUsers();
     this.persistCurrentUser(updated);
   }

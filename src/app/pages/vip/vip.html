@@ -1,0 +1,165 @@
+<div class="page container">
+  <!-- BANNER PRINCIPAL VIP -->
+  <div class="vip-hero card">
+    <div class="vip-hero__content">
+      <span class="badge badge-vip">👑 ÁREA EXCLUSIVA</span>
+      <h1>Seja Membro <span class="text-primary">CaputeStore VIP</span></h1>
+      <p>
+        Desbloqueie benefícios insanos, cupons de até 30% OFF, ofertas antecipadas e solicite acesso ao nosso Grupo VIP no WhatsApp por apenas <strong>R$ 20,00</strong>!
+      </p>
+
+      @if (auth.isVip()) {
+        <div class="vip-status-box success">
+          <span class="status-badge">✅ SEU STATUS: MEMBRO VIP ATIVO</span>
+          <p>Você tem acesso ilimitado a todos os benefícios, sorteios Premium e parcerias digitais!</p>
+          <a [href]="vipService.whatsappGroupUrl" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg">
+            💬 Solicitar Entrada no Grupo do WhatsApp (14 99785-3237)
+          </a>
+        </div>
+      } @else {
+        <div class="vip-price-box">
+          <div class="price-tag">
+            <span class="currency">R$</span>
+            <span class="amount">20,00</span>
+            <span class="period">/ assinatura única</span>
+          </div>
+          <button type="button" class="btn btn-vip btn-lg" (click)="openCheckout()">
+            ⚡ ASSINAR PLANO VIP AGORA
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- SEÇÃO DE BENEFÍCIOS -->
+  <div class="vip-section">
+    <div class="section-title">
+      <h2>BENEFÍCIOS EXCLUSIVOS DO PLANO VIP</h2>
+    </div>
+
+    <div class="grid-benefits">
+      <div class="benefit-card card">
+        <div class="benefit-icon">📱</div>
+        <h3>Grupo Exclusivo WhatsApp</h3>
+        <p>Envie uma mensagem direta pelo WhatsApp para o número <strong>(14) 99785-3237</strong> solicitando a entrada no grupo de promoções.</p>
+        @if (auth.isVip()) {
+          <a [href]="vipService.whatsappGroupUrl" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">Chamar no WhatsApp</a>
+        } @else {
+          <span class="lock-tag">🔒 Requer Plano VIP</span>
+        }
+      </div>
+
+      <div class="benefit-card card">
+        <div class="benefit-icon">🎟️</div>
+        <h3>Sorteios Premium 25% &amp; 30%</h3>
+        <p>Participação exclusiva nos sorteios de 15 cupons de 25% OFF e 10 cupons de 30% OFF no catálogo inteiro.</p>
+        <a routerLink="/cupons" class="btn btn-outline btn-sm">Ver Sorteios</a>
+      </div>
+
+      <div class="benefit-card card">
+        <div class="benefit-icon">⚡</div>
+        <h3>Acesso Antecipado</h3>
+        <p>Compre lançamentos e produtos de estoque limitado antes do público geral com desconto VIP exclusivo.</p>
+        <a routerLink="/produtos" [queryParams]="{ exclusivo: 1 }" class="btn btn-outline btn-sm">Ver Lançamentos</a>
+      </div>
+
+      <div class="benefit-card card">
+        <div class="benefit-icon">🎬</div>
+        <h3>Parcerias Digitais <span class="badge-beta-inline">BETA</span></h3>
+        <p>Parcerias especiais com plataformas de filmes, streaming de música, e-sports e cursos de tecnologia em fase de testes.</p>
+        <span class="tag-badge beta-tag">🧪 Versão BETA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO DE PARCERIAS DIGITAIS (EXPANSÍVEL & BETA) -->
+  <div class="vip-section">
+    <div class="section-title">
+      <h2>
+        🎬 PARCERIAS &amp; VANTAGENS DIGITAIS
+        <span class="badge badge-beta">BETA</span>
+      </h2>
+    </div>
+
+    <div class="beta-notice-box card">
+      <span class="beta-icon">⚠️</span>
+      <div class="beta-text">
+        <strong>Funcionalidade em fase BETA de Homologação:</strong>
+        <p>As parcerias abaixo estão em testes integrados. Seus cupons e benefícios de parceiros (Filmes, Streaming e Cursos) estão liberados em modo experimental para membros VIP.</p>
+      </div>
+    </div>
+
+    <div class="grid-partners">
+      @for (p of vipService.partnerships(); track p.id) {
+        <div class="partner-card card" [class.locked]="!auth.isVip()">
+          <div class="partner-header">
+            <span class="partner-icon">{{ p.icon }}</span>
+            <span class="partner-category">{{ p.category }}</span>
+            <span class="badge-beta-sm">BETA</span>
+          </div>
+          <h4>{{ p.partnerName }}</h4>
+          <p>{{ p.benefit }}</p>
+
+          @if (auth.isVip()) {
+            <div class="partner-claim">
+              <code>{{ p.claimCode }}</code>
+              <button type="button" class="btn btn-primary btn-sm" (click)="copyPartnerCode(p.claimCode)">Copiar Código</button>
+            </div>
+          } @else {
+            <div class="partner-locked-msg">
+              <span>🔒 Assine o VIP por R$ 20,00 para resgatar</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE PAGAMENTO PLANO VIP -->
+@if (showCheckoutModal()) {
+  <div class="modal-backdrop" (click)="closeCheckout()">
+    <div class="modal-card card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Assinatura Plano VIP — CaputeStore</h3>
+        <button type="button" class="close-btn" (click)="closeCheckout()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="summary-line">
+          <span>Item: Assinatura Membro VIP CaputeStore</span>
+          <strong class="text-primary">R$ 20,00</strong>
+        </div>
+
+        <div class="payment-options">
+          <label [class.active]="paymentMethod() === 'pix'">
+            <input type="radio" name="pay" value="pix" [checked]="paymentMethod() === 'pix'" (change)="paymentMethod.set('pix')" />
+            <span>⚡ PIX (Aprovação Instantânea)</span>
+          </label>
+          <label [class.active]="paymentMethod() === 'cartao'">
+            <input type="radio" name="pay" value="cartao" [checked]="paymentMethod() === 'cartao'" (change)="paymentMethod.set('cartao')" />
+            <span>💳 Cartão de Crédito (Até 12x)</span>
+          </label>
+          <label [class.active]="paymentMethod() === 'boleto'">
+            <input type="radio" name="pay" value="boleto" [checked]="paymentMethod() === 'boleto'" (change)="paymentMethod.set('boleto')" />
+            <span>📄 Boleto Bancário</span>
+          </label>
+        </div>
+
+        @if (paymentMethod() === 'pix') {
+          <div class="pix-box">
+            <p>Chave PIX Copia e Cola gerada:</p>
+            <code>00020126580014BR.GOV.BCB.PIX0136capute-vip-20-00-pix-chave-demo</code>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="closeCheckout()">Cancelar</button>
+        <button type="button" class="btn btn-vip" [disabled]="processing()" (click)="confirmPayment()">
+          @if (processing()) { Processando... } @else { Confirmar Pagamento (R$ 20,00) }
+        </button>
+      </div>
+    </div>
+  </div>
+}

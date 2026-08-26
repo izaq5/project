@@ -2,9 +2,13 @@
   <div class="header-top">
     <div class="container header-top__inner">
       <a routerLink="/" class="logo">
-        <span class="logo-bolt">⚡</span>
-        <span class="logo-text"><span class="text-primary">NEXUS</span> STORE</span>
-        <span class="logo-tag">PREMIUM</span>
+        <div class="logo-icon">
+          <span class="cart-c">C</span>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-text">Capute<span class="text-primary">Store</span></span>
+          <span class="logo-tag">ELETRÔNICOS • QUALIDADE • CONFIANÇA</span>
+        </div>
       </a>
 
       <form class="search" (submit)="$event.preventDefault(); submitSearch()">
@@ -15,13 +19,19 @@
           (input)="searchTerm.set($any($event.target).value)"
           (click)="onSearch($event)"
         />
-       
+        <button type="submit" class="search-btn" aria-label="Buscar">
+          🔍
+        </button>
       </form>
 
       <div class="header-actions">
+        <a routerLink="/vip" class="btn btn-vip btn-sm vip-pill">
+          👑 ÁREA VIP (R$ 20)
+        </a>
+
         <div class="action-item user-menu" (click)="toggleUserMenu(); $event.stopPropagation()">
           @if (authService.isLoggedIn()) {
-            <span class="mini-avatar">
+            <span class="mini-avatar" [class.vip-avatar]="authService.isVip()">
               @if (authService.currentUser()!.avatarUrl) {
                 <img [src]="authService.currentUser()!.avatarUrl" alt="" />
               } @else {
@@ -29,14 +39,17 @@
               }
             </span>
             <div class="action-label">
-              <span class="label-top">Meu Perfil</span>
+              <span class="label-top">
+                @if (authService.isVip()) { Membro VIP } @else { Olá, }
+              </span>
               <span class="label-bottom">{{ authService.currentUser()!.name.split(' ')[0] }}</span>
             </div>
           } @else {
             <a routerLink="/login" class="action-icon-link">
+              <span class="user-icon">👤</span>
               <div class="action-label">
-                <span class="label-top">Entrar</span>
-                <span class="label-bottom">Meu Perfil</span>
+                <span class="label-top">Entrar /</span>
+                <span class="label-bottom">Cadastrar</span>
               </div>
             </a>
           }
@@ -46,9 +59,9 @@
               <a routerLink="/perfil" class="dropdown-item">Meu Perfil</a>
               <a routerLink="/pedidos" class="dropdown-item">Meus Pedidos</a>
               <a routerLink="/favoritos" class="dropdown-item">Favoritos</a>
-              @if (authService.currentUser()!.exclusiveMember) {
-                <span class="dropdown-badge badge badge-exclusive">Membro VIP</span>
-              }
+              <a routerLink="/vip" class="dropdown-item">
+                @if (authService.isVip()) { 👑 Status VIP (Ativo) } @else { ⚡ Seja Membro VIP }
+              </a>
               <button type="button" class="dropdown-item dropdown-logout" (click)="logout()">Sair</button>
             </div>
           }
@@ -56,10 +69,9 @@
 
         <a routerLink="/favoritos" class="action-item">
           <span class="action-icon">♡</span>
-          <div class="action-label">
-            <span class="label-top">Favoritos</span>
-            <span class="label-bottom">({{ favoritesService.count() }})</span>
-          </div>
+          @if (favoritesService.count() > 0) {
+            <span class="fav-badge">{{ favoritesService.count() }}</span>
+          }
         </a>
 
         <a routerLink="/carrinho" class="action-item cart-action">
@@ -68,7 +80,6 @@
             <span class="cart-badge">{{ cartService.itemCount() }}</span>
           }
           <div class="action-label">
-            <span class="label-top">Carrinho</span>
             <span class="label-bottom">R$ {{ cartService.subtotal().toFixed(2).replace('.', ',') }}</span>
           </div>
         </a>
@@ -82,12 +93,16 @@
 
   <nav class="header-nav" [class.open]="mobileMenuOpen()">
     <div class="container header-nav__inner">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">Início</a>
-      <a routerLink="/produtos" routerLinkActive="active" (click)="closeMobileMenu()">Produtos</a>
-      <a routerLink="/produtos" [queryParams]="{ exclusivo: 1 }" routerLinkActive="active" (click)="closeMobileMenu()">Ofertas Exclusivas</a>
-      <a routerLink="/cupons" routerLinkActive="active" (click)="closeMobileMenu()">Cupons</a>
-      <a routerLink="/suporte" routerLinkActive="active" (click)="closeMobileMenu()">Suporte</a>
-    
+      <a routerLink="/produtos" class="cat-btn">
+        <span>☰ CATEGORIAS ˅</span>
+      </a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">INÍCIO</a>
+      <a routerLink="/produtos" [queryParams]="{ ordenar: 'menor-preco' }" routerLinkActive="active" (click)="closeMobileMenu()">OFERTAS</a>
+      <a routerLink="/produtos" [queryParams]="{ ordenar: 'novo' }" routerLinkActive="active" (click)="closeMobileMenu()">LANÇAMENTOS</a>
+      <a routerLink="/produtos" [queryParams]="{ ordenar: 'mais-vendidos' }" routerLinkActive="active" (click)="closeMobileMenu()">MAIS VENDIDOS</a>
+      <a routerLink="/cupons" routerLinkActive="active" (click)="closeMobileMenu()">CUPONS &amp; SORTEIOS</a>
+      <a routerLink="/vip" routerLinkActive="active" class="nav-vip-link" (click)="closeMobileMenu()">👑 ÁREA VIP</a>
+      <a routerLink="/suporte" routerLinkActive="active" (click)="closeMobileMenu()">SUPORTE</a>
     </div>
   </nav>
 </header>
