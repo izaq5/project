@@ -1,0 +1,93 @@
+<header class="header">
+  <div class="header-top">
+    <div class="container header-top__inner">
+      <a routerLink="/" class="logo">
+        <span class="logo-bolt">⚡</span>
+        <span class="logo-text"><span class="text-primary">NEXUS</span> STORE</span>
+        <span class="logo-tag">PREMIUM</span>
+      </a>
+
+      <form class="search" (submit)="$event.preventDefault(); submitSearch()">
+        <input
+          type="text"
+          placeholder="Buscar produtos..."
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+          (click)="onSearch($event)"
+        />
+       
+      </form>
+
+      <div class="header-actions">
+        <div class="action-item user-menu" (click)="toggleUserMenu(); $event.stopPropagation()">
+          @if (authService.isLoggedIn()) {
+            <span class="mini-avatar">
+              @if (authService.currentUser()!.avatarUrl) {
+                <img [src]="authService.currentUser()!.avatarUrl" alt="" />
+              } @else {
+                {{ authService.currentUser()!.name.charAt(0) }}
+              }
+            </span>
+            <div class="action-label">
+              <span class="label-top">Meu Perfil</span>
+              <span class="label-bottom">{{ authService.currentUser()!.name.split(' ')[0] }}</span>
+            </div>
+          } @else {
+            <a routerLink="/login" class="action-icon-link">
+              <div class="action-label">
+                <span class="label-top">Entrar</span>
+                <span class="label-bottom">Meu Perfil</span>
+              </div>
+            </a>
+          }
+
+          @if (userMenuOpen() && authService.isLoggedIn()) {
+            <div class="dropdown" (click)="$event.stopPropagation()">
+              <a routerLink="/perfil" class="dropdown-item">Meu Perfil</a>
+              <a routerLink="/pedidos" class="dropdown-item">Meus Pedidos</a>
+              <a routerLink="/favoritos" class="dropdown-item">Favoritos</a>
+              @if (authService.currentUser()!.exclusiveMember) {
+                <span class="dropdown-badge badge badge-exclusive">Membro VIP</span>
+              }
+              <button type="button" class="dropdown-item dropdown-logout" (click)="logout()">Sair</button>
+            </div>
+          }
+        </div>
+
+        <a routerLink="/favoritos" class="action-item">
+          <span class="action-icon">♡</span>
+          <div class="action-label">
+            <span class="label-top">Favoritos</span>
+            <span class="label-bottom">({{ favoritesService.count() }})</span>
+          </div>
+        </a>
+
+        <a routerLink="/carrinho" class="action-item cart-action">
+          <span class="action-icon">🛒</span>
+          @if (cartService.itemCount() > 0) {
+            <span class="cart-badge">{{ cartService.itemCount() }}</span>
+          }
+          <div class="action-label">
+            <span class="label-top">Carrinho</span>
+            <span class="label-bottom">R$ {{ cartService.subtotal().toFixed(2).replace('.', ',') }}</span>
+          </div>
+        </a>
+
+        <button type="button" class="mobile-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+          ☰
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="header-nav" [class.open]="mobileMenuOpen()">
+    <div class="container header-nav__inner">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">Início</a>
+      <a routerLink="/produtos" routerLinkActive="active" (click)="closeMobileMenu()">Produtos</a>
+      <a routerLink="/produtos" [queryParams]="{ exclusivo: 1 }" routerLinkActive="active" (click)="closeMobileMenu()">Ofertas Exclusivas</a>
+      <a routerLink="/cupons" routerLinkActive="active" (click)="closeMobileMenu()">Cupons</a>
+      <a routerLink="/suporte" routerLinkActive="active" (click)="closeMobileMenu()">Suporte</a>
+    
+    </div>
+  </nav>
+</header>

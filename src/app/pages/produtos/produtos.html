@@ -1,0 +1,82 @@
+<div class="container page produtos-page">
+  <div class="page-header">
+    <h1>Produtos</h1>
+    <p>{{ filtered().length }} produto(s) encontrado(s) @if (term()) { para "<strong>{{ term() }}</strong>" }</p>
+  </div>
+
+  <button type="button" class="btn btn-outline btn-block filters-toggle" (click)="filtersOpen.set(!filtersOpen())">
+    ⚙ Filtros {{ filtersOpen() ? '▲' : '▼' }}
+  </button>
+
+  <div class="produtos-layout">
+    <aside class="filters" [class.open]="filtersOpen()">
+      <div class="filters-block">
+        <h3>Categorias</h3>
+        <ul>
+          <li>
+            <button type="button" [class.active]="selectedCategory() === null" (click)="selectCategory(null)">
+              Todas as categorias
+            </button>
+          </li>
+          @for (cat of categories; track cat) {
+            <li>
+              <button type="button" [class.active]="selectedCategory() === cat" (click)="selectCategory(cat)">
+                {{ cat }}
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="filters-block">
+        <h3>Preço máximo</h3>
+        <input
+          type="range"
+          min="50"
+          max="6000"
+          step="50"
+          [value]="maxPrice()"
+          (input)="setMaxPrice($any($event.target).value)"
+        />
+        <span class="price-value">até R$ {{ maxPrice().toFixed(0) }}</span>
+      </div>
+
+      <div class="filters-block">
+        <label class="checkbox-row">
+          <input type="checkbox" [checked]="onlyExclusive()" (change)="toggleExclusive()" />
+          <span>Somente produtos <strong class="text-primary">Exclusivos</strong> Nexus VIP</span>
+        </label>
+      </div>
+
+      <button type="button" class="btn btn-ghost btn-block" (click)="clearFilters()">Limpar filtros</button>
+    </aside>
+
+    <div class="produtos-content">
+      <div class="toolbar">
+        <span>{{ filtered().length }} resultado(s)</span>
+        <select class="select sort-select" [value]="sort()" (change)="setSort($any($event.target).value)">
+          <option value="relevancia">Relevância</option>
+          <option value="menor-preco">Menor preço</option>
+          <option value="maior-preco">Maior preço</option>
+          <option value="melhor-avaliados">Melhor avaliados</option>
+          <option value="mais-vendidos">Mais vendidos</option>
+        </select>
+      </div>
+
+      @if (filtered().length) {
+        <div class="grid-products">
+          @for (p of filtered(); track p.id) {
+            <app-product-card [product]="p" />
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>Nenhum produto encontrado</h3>
+          <p>Tente ajustar os filtros ou buscar por outro termo.</p>
+          <button type="button" class="btn btn-primary" (click)="clearFilters()">Limpar filtros</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

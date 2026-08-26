@@ -1,0 +1,58 @@
+<div class="container page cupons-page">
+  <div class="page-header">
+    <h1>🏷 Cupons de Desconto</h1>
+    <p>Use os cupons abaixo no seu carrinho ou checkout e economize nas suas compras.</p>
+  </div>
+
+  <section class="coupon-section">
+    <div class="section-title">
+      <h2><span class="badge badge-primary">Normal</span> Cupons para todos os clientes</h2>
+    </div>
+    <div class="coupons-grid">
+      @for (c of normalCoupons; track c.code) {
+        <div class="coupon-card">
+          <div class="coupon-percent">{{ c.discountPercent }}%<small>OFF</small></div>
+          <div class="coupon-body">
+            <strong class="code">{{ c.code }}</strong>
+            <p>{{ c.description }}</p>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" (click)="copyCode(c.code)">
+            {{ copied() === c.code ? 'Copiado ✓' : 'Copiar código' }}
+          </button>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="coupon-section">
+    <div class="section-title">
+      <h2><span class="badge badge-exclusive">Exclusivo</span> Cupons Nexus VIP</h2>
+    </div>
+
+    @if (!isExclusiveMember) {
+      <div class="vip-banner">
+        <p>🔒 Estes cupons são exclusivos para membros <strong>Nexus VIP</strong>. Cadastre-se gratuitamente para desbloquear.</p>
+        <a routerLink="/cadastro" class="btn btn-exclusive">Quero ser VIP</a>
+      </div>
+    }
+
+    <div class="coupons-grid">
+      @for (c of exclusiveCoupons; track c.code) {
+        <div class="coupon-card exclusive" [class.locked]="!isExclusiveMember">
+          <div class="coupon-percent exclusive-percent">{{ c.discountPercent }}%<small>OFF</small></div>
+          <div class="coupon-body">
+            <strong class="code">{{ c.code }}</strong>
+            <p>{{ c.description }}</p>
+          </div>
+          @if (isExclusiveMember) {
+            <button type="button" class="btn btn-exclusive btn-sm" (click)="copyCode(c.code)">
+              {{ copied() === c.code ? 'Copiado ✓' : 'Copiar código' }}
+            </button>
+          } @else {
+            <span class="lock-icon">🔒</span>
+          }
+        </div>
+      }
+    </div>
+  </section>
+</div>

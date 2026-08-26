@@ -1,0 +1,82 @@
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <span class="badge badge-primary hero__badge">🔥 Marketplace Premium</span>
+      <h1>Compre &amp; Venda com Segurança na <span class="text-primary">Nexus</span></h1>
+      <p>Encontre eletrônicos, vestuário e acessórios de alta qualidade com garantia, entrega rápida e parcelamento facilitado.</p>
+
+      <div class="hero__actions">
+        <a routerLink="/produtos" class="btn btn-primary">Ver Produtos</a>
+        <a routerLink="/vender" class="btn btn-outline">Quero Vender</a>
+      </div>
+
+      <div class="hero__trust">
+        <span>🔒 Compra Segura</span>
+        <span>🚚 Frete Grátis acima de R$ 500</span>
+        <span>↩ Devolução em 7 dias</span>
+      </div>
+    </div>
+
+    <div class="hero__image">
+      <img src="https://picsum.photos/seed/nexus-hero/700/700" alt="Produtos Nexus Store" />
+    </div>
+  </div>
+</section>
+
+<section class="container categories-strip">
+  @for (cat of categories; track cat) {
+    <a class="category-pill" [routerLink]="['/produtos']" [queryParams]="{ categoria: cat }">{{ cat }}</a>
+  }
+</section>
+
+<section class="container section-block">
+  <div class="section-title">
+    <h2>🔥 Mais Vendidos</h2>
+    <a routerLink="/produtos" [queryParams]="{ ordenar: 'mais-vendidos' }">Ver todos →</a>
+  </div>
+  <div class="grid-products">
+    @for (p of bestSellers; track p.id) {
+      <app-product-card [product]="p" />
+    }
+  </div>
+</section>
+
+<section class="exclusive-band">
+  <div class="container section-block">
+    <div class="section-title">
+      <h2><span class="badge badge-exclusive">Exclusivo</span> Ofertas Nexus VIP</h2>
+      <a routerLink="/produtos" [queryParams]="{ exclusivo: 1 }">Ver todos →</a>
+    </div>
+    <div class="grid-products">
+      @for (p of exclusiveProducts; track p.id) {
+        <app-product-card [product]="p" />
+      }
+    </div>
+    <div class="vip-cta">
+      <p>Cadastre-se e desbloqueie cupons e produtos exclusivos para membros Nexus VIP.</p>
+      <a routerLink="/cadastro" class="btn btn-exclusive">Quero ser VIP</a>
+    </div>
+  </div>
+</section>
+
+@if (newProducts.length) {
+  <section class="container section-block">
+    <div class="section-title">
+      <h2>✨ Novidades</h2>
+      <a routerLink="/produtos" [queryParams]="{ ordenar: 'novo' }">Ver todos →</a>
+    </div>
+    <div class="grid-products">
+      @for (p of newProducts; track p.id) {
+        <app-product-card [product]="p" />
+      }
+    </div>
+  </section>
+}
+
+<section class="container sell-banner">
+  <div class="sell-banner__content">
+    <h2>Tem produtos para vender?</h2>
+    <p>Cadastre seu produto e alcance milhares de clientes na Nexus Store, com pagamento seguro e visibilidade garantida.</p>
+    <a routerLink="/vender" class="btn btn-primary">Cadastrar Produto</a>
+  </div>
+</section>

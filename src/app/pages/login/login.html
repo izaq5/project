@@ -1,0 +1,33 @@
+<div class="container page auth-page">
+  <div class="auth-card card">
+    <div class="auth-header">
+      <span class="logo-bolt">⚡</span>
+      <h1><span class="text-primary">NEXUS</span> STORE</h1>
+      <p>Entre na sua conta para acompanhar pedidos, favoritos e cupons exclusivos.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      @if (errorMessage()) {
+        <div class="alert alert-error">{{ errorMessage() }}</div>
+      }
+
+      <div class="field">
+        <label>E-mail <span class="req">*</span></label>
+        <input class="input" [class.invalid]="field('email')" type="email" formControlName="email" placeholder="seuemail@exemplo.com" />
+        @if (field('email')) { <span class="error-msg">Informe um e-mail válido.</span> }
+      </div>
+
+      <div class="field">
+        <label>Senha <span class="req">*</span></label>
+        <input class="input" [class.invalid]="field('password')" type="password" formControlName="password" placeholder="••••••••" />
+        @if (field('password')) { <span class="error-msg">Informe sua senha.</span> }
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+        {{ submitting() ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">Ainda não tem conta? <a routerLink="/cadastro">Cadastre-se grátis</a></p>
+  </div>
+</div>

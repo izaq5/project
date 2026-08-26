@@ -1,0 +1,73 @@
+<div class="container page perfil-page">
+  @if (authService.currentUser(); as user) {
+    <div class="perfil-header card">
+      <button type="button" class="avatar" (click)="triggerAvatarUpload()" aria-label="Alterar foto de perfil">
+        @if (user.avatarUrl) {
+          <img [src]="user.avatarUrl" alt="Foto de perfil" />
+        } @else {
+          <span>{{ user.name.charAt(0) }}</span>
+        }
+        <span class="avatar-overlay">📷</span>
+      </button>
+      <input #avatarInput type="file" accept="image/*" class="avatar-input" (change)="onAvatarSelected($event)" />
+
+      <div class="info">
+        <h1>{{ user.name }}</h1>
+        <span>{{ user.email }}</span>
+        @if (user.phone) { <span>{{ user.phone }}</span> }
+        @if (user.exclusiveMember) {
+          <span class="badge badge-exclusive">Membro Nexus VIP</span>
+        } @else {
+          <span class="badge badge-outline">Cliente Padrão</span>
+        }
+      </div>
+      <button type="button" class="btn btn-outline" (click)="logout()">Sair</button>
+    </div>
+
+    <div class="perfil-grid">
+      <a routerLink="/pedidos" class="perfil-card">
+        <span>📦</span>
+        <div><strong>{{ orderService.orders().length }}</strong><small>Meus Pedidos</small></div>
+      </a>
+      <a routerLink="/favoritos" class="perfil-card">
+        <span>♥</span>
+        <div><strong>{{ favoritesService.count() }}</strong><small>Favoritos</small></div>
+      </a>
+      <a routerLink="/vender" class="perfil-card">
+        <span>🏷</span>
+        <div><strong>Anunciar</strong><small>Vender um produto</small></div>
+      </a>
+      <a routerLink="/cupons" class="perfil-card">
+        <span>💳</span>
+        <div><strong>Cupons</strong><small>Ver ofertas</small></div>
+      </a>
+    </div>
+
+    <div class="vip-toggle card">
+      @if (user.exclusiveMember) {
+        <div>
+          <strong>Você é membro Nexus VIP 🎉</strong>
+          <p>Aproveite cupons e produtos exclusivos em toda a loja.</p>
+        </div>
+        <button type="button" class="btn btn-outline" (click)="requestVip()">Sair do Nexus VIP</button>
+      } @else {
+        <div>
+          <strong>Torne-se Nexus VIP</strong>
+          <p>Desbloqueie cupons e produtos exclusivos gratuitamente.</p>
+        </div>
+        <button type="button" class="btn btn-exclusive" (click)="requestVip()">Quero ser VIP</button>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-icon">👤</div>
+      <h3>Você precisa entrar na sua conta</h3>
+      <p>Faça login para ver seu perfil, pedidos e favoritos.</p>
+      <a routerLink="/login" class="btn btn-primary">Entrar</a>
+    </div>
+  }
+</div>
+
+@if (showVipOffer()) {
+  <app-vip-offer-modal (confirm)="confirmVipOffer()" (cancel)="declineVipOffer()" />
+}

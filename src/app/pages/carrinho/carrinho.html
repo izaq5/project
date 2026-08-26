@@ -1,0 +1,74 @@
+<div class="container page carrinho-page">
+  <h1>Carrinho de Compras</h1>
+
+  @if (cartService.isEmpty()) {
+    <div class="empty-state">
+      <div class="empty-icon">🛒</div>
+      <h3>Seu carrinho está vazio</h3>
+      <p>Explore nossos produtos e encontre o que você precisa.</p>
+      <a routerLink="/produtos" class="btn btn-primary">Ver Produtos</a>
+    </div>
+  } @else {
+    <div class="carrinho-layout">
+      <div class="items-list">
+        @for (item of cartService.items(); track item.product.id) {
+          <div class="cart-item">
+            <a [routerLink]="['/produtos', item.product.id]" class="cart-item__image">
+              <img [src]="item.product.images[0]" [alt]="item.product.name" />
+            </a>
+            <div class="cart-item__info">
+              <a [routerLink]="['/produtos', item.product.id]" class="name">{{ item.product.name }}</a>
+              <span class="category">{{ item.product.category }}</span>
+              <span class="unit-price">R$ {{ item.product.price.toFixed(2).replace('.', ',') }} / un.</span>
+            </div>
+            <div class="cart-item__qty">
+              <div class="stepper">
+                <button type="button" (click)="cartService.decrement(item.product.id)">−</button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" (click)="cartService.increment(item.product.id)" [disabled]="item.quantity >= item.product.stock">+</button>
+              </div>
+            </div>
+            <div class="cart-item__total">
+              <strong>R$ {{ (item.product.price * item.quantity).toFixed(2).replace('.', ',') }}</strong>
+              <button type="button" class="remove-btn" (click)="cartService.remove(item.product.id)">Remover</button>
+            </div>
+          </div>
+        }
+
+        <a routerLink="/produtos" class="continue-link">← Continuar comprando</a>
+      </div>
+
+      <aside class="summary card">
+        <h3>Resumo do Pedido <span class="items-count">({{ cartService.itemCount() }} itens)</span></h3>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>R$ {{ cartService.subtotal().toFixed(2).replace('.', ',') }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Frete</span>
+          @if (shippingCost === 0) {
+            <span class="text-primary">Grátis</span>
+          } @else {
+            <span>R$ {{ shippingCost.toFixed(2).replace('.', ',') }}</span>
+          }
+        </div>
+
+        @if (missingForFreeShipping > 0) {
+          <p class="free-shipping-hint">
+            🚚 Faltam <strong>R$ {{ missingForFreeShipping.toFixed(2).replace('.', ',') }}</strong> para frete grátis!
+          </p>
+        }
+
+        <div class="divider"></div>
+
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span>R$ {{ total.toFixed(2).replace('.', ',') }}</span>
+        </div>
+
+        <a routerLink="/checkout" class="btn btn-primary btn-block">Finalizar Compra</a>
+      </aside>
+    </div>
+  }
+</div>

@@ -1,0 +1,38 @@
+<a class="product-card" [routerLink]="['/produtos', product().id]">
+  <div class="product-card__image">
+    <img [src]="product().images[0]" [alt]="product().name" loading="lazy" />
+
+    <div class="product-card__badges">
+      @if (product().badge === 'exclusivo') {
+        <span class="badge badge-exclusive">Exclusivo</span>
+      } @else if (product().badge) {
+        <span class="badge badge-primary">{{ badgeLabel() }}</span>
+      }
+      @if (discountPercent > 0) {
+        <span class="badge badge-outline discount">-{{ discountPercent }}%</span>
+      }
+    </div>
+
+    <button type="button" class="fav-btn" [class.active]="isFavorite" (click)="toggleFavorite($event)" aria-label="Favoritar">
+      {{ isFavorite ? '♥' : '♡' }}
+    </button>
+  </div>
+
+  <div class="product-card__body">
+    <span class="product-card__category">{{ product().category }}</span>
+    <h3 class="product-card__name">{{ product().name }}</h3>
+
+    <app-star-rating [rating]="product().rating" />
+
+    <div class="product-card__price">
+      @if (product().originalPrice && product().originalPrice! > product().price) {
+        <span class="old-price">R$ {{ product().originalPrice!.toFixed(2).replace('.', ',') }}</span>
+      }
+      <span class="price">R$ {{ product().price.toFixed(2).replace('.', ',') }}</span>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-block add-btn" (click)="addToCart($event)">
+      🛒 Adicionar
+    </button>
+  </div>
+</a>

@@ -1,0 +1,78 @@
+<div class="container page vender-page">
+  @if (!submitted()) {
+    <div class="page-header">
+      <h1>📦 Cadastrar Produto</h1>
+      <p>Anuncie seu produto na Nexus Store e alcance milhares de clientes.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="card vender-form">
+      <div class="field">
+        <label>Nome do produto <span class="req">*</span></label>
+        <input class="input" [class.invalid]="field('name')" formControlName="name" placeholder="Ex: Headset Gamer Pro X" />
+        @if (field('name')) { <span class="error-msg">Informe o nome do produto.</span> }
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Categoria <span class="req">*</span></label>
+          <select class="select" formControlName="category">
+            @for (c of categories; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label>Estoque disponível <span class="req">*</span></label>
+          <input class="input" type="number" min="1" [class.invalid]="field('stock')" formControlName="stock" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Preço de venda (R$) <span class="req">*</span></label>
+          <input class="input" type="number" min="1" step="0.01" [class.invalid]="field('price')" formControlName="price" />
+        </div>
+        <div class="field">
+          <label>Preço original (opcional, para exibir desconto)</label>
+          <input class="input" type="number" min="0" step="0.01" formControlName="originalPrice" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>URL da imagem do produto (opcional)</label>
+        <input class="input" formControlName="imageUrl" placeholder="https://" />
+        <span class="hint">Se não informar, geraremos uma imagem de exemplo automaticamente.</span>
+      </div>
+
+      <div class="field">
+        <label>Descrição do produto <span class="req">*</span></label>
+        <textarea class="textarea" [class.invalid]="field('description')" formControlName="description" placeholder="Descreva as características, materiais e diferenciais do seu produto..."></textarea>
+        @if (field('description')) { <span class="error-msg">A descrição deve ter ao menos 20 caracteres.</span> }
+      </div>
+
+      <label class="checkbox-row vip-row">
+        <input type="checkbox" formControlName="exclusive" />
+        <span>Marcar como produto <strong class="text-primary">Exclusivo Nexus VIP</strong></span>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" formControlName="freeShipping" />
+        <span>Oferecer frete grátis para este produto</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" [disabled]="submitting()">
+        {{ submitting() ? 'Cadastrando...' : 'Cadastrar Produto' }}
+      </button>
+    </form>
+  } @else {
+    <div class="card success-block">
+      <div class="success-icon">✓</div>
+      <h2>Produto cadastrado com sucesso!</h2>
+      <p>Seu produto já está disponível na loja Nexus Store para todos os clientes.</p>
+      <div class="success-actions">
+        <button type="button" class="btn btn-primary" (click)="goToProduct()">Ver Produto na Loja</button>
+        <button type="button" class="btn btn-outline" (click)="addAnother()">Cadastrar Outro Produto</button>
+      </div>
+    </div>
+  }
+</div>

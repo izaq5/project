@@ -1,0 +1,52 @@
+.page-header {
+  margin-bottom: 24px;
+
+  h1 { font-size: 1.7rem; margin-bottom: 6px; }
+}
+
+.vender-form {
+  max-width: 640px;
+  padding: 28px;
+}
+
+.hint { font-size: .76rem; color: var(--text-faint); display: block; margin-top: 6px; }
+
+.vip-row {
+  background: rgba(139,92,246,.08);
+  border: 1px solid rgba(139,92,246,.25);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.checkbox-row { margin-bottom: 16px; }
+
+.success-block {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 56px 32px;
+
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--success);
+    color: #fff;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+
+  h2 { margin-bottom: 10px; }
+}
+
+.success-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}

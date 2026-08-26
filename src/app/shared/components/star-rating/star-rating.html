@@ -1,0 +1,17 @@
+<span class="star-rating">
+  <span class="stars">
+    @for (s of stars(); track $index) {
+      @switch (s) {
+        @case ('full') { <span class="star full">★</span> }
+        @case ('half') { <span class="star half">★</span> }
+        @default { <span class="star empty">★</span> }
+      }
+    }
+  </span>
+  @if (showValue()) {
+    <span class="value">{{ rating().toFixed(1) }}</span>
+  }
+  @if (reviewsCount() !== null) {
+    <span class="count">({{ reviewsCount() }} avaliações)</span>
+  }
+</span>

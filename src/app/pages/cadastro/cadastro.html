@@ -1,0 +1,68 @@
+<div class="container page auth-page">
+  <div class="auth-card card">
+    <div class="auth-header">
+      <span class="logo-bolt">⚡</span>
+      <h1><span class="text-primary">NEXUS</span> STORE</h1>
+      <p>Crie sua conta e desbloqueie cupons e produtos exclusivos Nexus VIP.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      @if (errorMessage()) {
+        <div class="alert alert-error">{{ errorMessage() }}</div>
+      }
+
+      <div class="field">
+        <label>Nome completo <span class="req">*</span></label>
+        <input class="input" [class.invalid]="field('name')" formControlName="name" placeholder="Seu nome completo" />
+        @if (field('name')) { <span class="error-msg">Informe seu nome.</span> }
+      </div>
+
+      <div class="field">
+        <label>E-mail <span class="req">*</span></label>
+        <input class="input" [class.invalid]="field('email')" type="email" formControlName="email" placeholder="seuemail@exemplo.com" />
+        @if (field('email')) { <span class="error-msg">Informe um e-mail válido.</span> }
+      </div>
+
+      <div class="field">
+        <label>Telefone</label>
+        <input class="input" formControlName="phone" placeholder="(11) 98765-4321" />
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Senha <span class="req">*</span></label>
+          <input class="input" [class.invalid]="field('password')" type="password" formControlName="password" placeholder="Mínimo 6 caracteres" />
+          @if (field('password')) { <span class="error-msg">Mínimo de 6 caracteres.</span> }
+        </div>
+        <div class="field">
+          <label>Confirmar senha <span class="req">*</span></label>
+          <input class="input" [class.invalid]="field('confirmPassword')" type="password" formControlName="confirmPassword" placeholder="Repita a senha" />
+          @if (form.errors?.['mismatch'] && form.get('confirmPassword')?.touched) {
+            <span class="error-msg">As senhas não coincidem.</span>
+          }
+        </div>
+      </div>
+
+      <label class="checkbox-row vip-row">
+        <input type="checkbox" formControlName="exclusiveMember" (click)="onVipCheckboxClick($event)" />
+        <span>Quero fazer parte do <strong class="text-primary">Nexus VIP</strong> e ter acesso a cupons e produtos exclusivos.</span>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" formControlName="terms" />
+        <span>Li e aceito os Termos de Uso e a Política de Privacidade.</span>
+      </label>
+      @if (field('terms')) { <span class="error-msg">Você precisa aceitar os termos.</span> }
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+        {{ submitting() ? 'Criando conta...' : 'Criar Conta' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+  </div>
+</div>
+
+@if (showVipOffer()) {
+  <app-vip-offer-modal (confirm)="confirmVipOffer()" (cancel)="declineVipOffer()" />
+}

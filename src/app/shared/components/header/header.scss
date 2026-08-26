@@ -1,0 +1,248 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-top__inner {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  .logo-bolt { font-size: 1.3rem; }
+
+  .logo-text {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text);
+    letter-spacing: -.02em;
+  }
+
+  .logo-tag {
+    font-size: .55rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--text-faint);
+    border-left: 1px solid var(--border-light);
+    padding-left: 8px;
+    margin-left: 2px;
+    align-self: flex-end;
+    margin-bottom: 4px;
+    display: none;
+  }
+
+  @media (min-width: 640px) { .logo-tag { display: inline; } }
+}
+
+.search {
+  flex: 1;
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color .2s ease;
+
+  &:focus-within { border-color: var(--primary); }
+
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    padding: 11px 14px;
+    font-size: .9rem;
+
+    &::placeholder { color: var(--text-faint); }
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0 16px;
+    height: 100%;
+    font-size: 1rem;
+
+    &:hover { color: var(--primary); }
+  }
+  
+  @media (max-width: 900px) { display: none; }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.action-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .2s ease;
+
+  &:hover { background: var(--surface-2); }
+}
+
+.action-icon-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-icon { font-size: 1.25rem; color: var(--text); }
+
+.mini-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.action-label {
+  display: none;
+  flex-direction: column;
+  line-height: 1.15;
+
+  .label-top { font-size: .7rem; color: var(--text-faint); }
+  .label-bottom { font-size: .82rem; font-weight: 700; color: var(--text); }
+
+  @media (min-width: 900px) { display: flex; }
+}
+
+/* No menu do usuário, o texto "Meu Perfil" fica sempre visível (mesmo em telas pequenas) */
+.user-menu .action-label { display: flex; }
+
+.cart-action { position: relative; }
+
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  left: 22px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: .65rem;
+  font-weight: 800;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-menu { position: relative; }
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  min-width: 180px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 50;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: .85rem;
+  color: var(--text);
+  background: none;
+  border: none;
+
+  &:hover { background: var(--surface-hover); }
+}
+
+.dropdown-badge { margin: 4px 10px; align-self: flex-start; }
+.dropdown-logout { color: var(--error); }
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.4rem;
+  padding: 6px;
+
+  @media (max-width: 900px) { display: block; }
+}
+
+.header-nav {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+
+  @media (max-width: 900px) {
+    display: none;
+    &.open { display: block; }
+  }
+}
+
+.header-nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  gap: 28px;
+  height: 48px;
+  overflow-x: auto;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 12px 16px;
+    gap: 14px;
+  }
+
+  a {
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
+
+    &:hover, &.active { color: var(--primary); border-color: var(--primary); }
+  }
+}

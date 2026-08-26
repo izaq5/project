@@ -1,0 +1,158 @@
+@if (product(); as product) {
+  <div class="container page">
+    <nav class="breadcrumb">
+      <a routerLink="/">Início</a> <span>›</span>
+      <a routerLink="/produtos" [queryParams]="{ categoria: product.category }">{{ product.category }}</a> <span>›</span>
+      <span>{{ product.name }}</span>
+    </nav>
+
+    <div class="pd-layout">
+      <div class="pd-gallery">
+        <div class="thumbs">
+          @for (img of product.images; track $index) {
+            <button type="button" class="thumb" [class.active]="activeImage() === $index" (click)="setActiveImage($index)">
+              <img [src]="img" [alt]="product.name" />
+            </button>
+          }
+        </div>
+
+        <div class="main-image">
+          @if (discountPercent() > 0) {
+            <span class="badge badge-primary discount-badge">-{{ discountPercent() }}%</span>
+          }
+          <button type="button" class="fav-toggle" [class.active]="isFavorite()" (click)="toggleFavorite()" aria-label="Favoritar">
+            {{ isFavorite() ? '♥' : '♡' }}
+          </button>
+          <img [src]="product.images[activeImage()]" [alt]="product.name" />
+        </div>
+      </div>
+
+      <div class="pd-info">
+        @if (product.badge === 'exclusivo') {
+          <span class="badge badge-exclusive">Exclusivo Nexus VIP</span>
+        } @else if (product.badge === 'mais-vendido') {
+          <span class="badge badge-primary">Mais Vendido</span>
+        } @else if (product.badge === 'novo') {
+          <span class="badge badge-primary">Novo</span>
+        }
+
+        <h1>{{ product.name }}</h1>
+        <app-star-rating [rating]="product.rating" [showValue]="true" [reviewsCount]="product.reviewsCount" />
+
+        <div class="price-block">
+          @if (product.originalPrice && product.originalPrice > product.price) {
+            <span class="old-price">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+            <span class="badge badge-outline">{{ discountPercent() }}% OFF</span>
+          }
+          <div class="price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</div>
+          <span class="installment">Em até <strong>12x</strong> de R$ {{ installment().toFixed(2).replace('.', ',') }} sem juros</span>
+        </div>
+
+        <ul class="features">
+          @for (f of product.features; track f) {
+            <li>✓ {{ f }}</li>
+          }
+        </ul>
+
+        <div class="quantity-row">
+          <span>Quantidade:</span>
+          <div class="stepper">
+            <button type="button" (click)="decQuantity()" [disabled]="quantity() <= 1">−</button>
+            <span>{{ quantity() }}</span>
+            <button type="button" (click)="incQuantity()" [disabled]="quantity() >= product.stock">+</button>
+          </div>
+          @if (product.stock > 0) {
+            <span class="badge badge-success">✓ Em estoque</span>
+          } @else {
+            <span class="badge badge-error">Esgotado</span>
+          }
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block btn-lg" (click)="addToCart()" [disabled]="product.stock === 0">
+          🛒 Adicionar ao Carrinho
+        </button>
+        <button type="button" class="btn btn-outline btn-block btn-lg fav-btn-lg" [class.active]="isFavorite()" (click)="toggleFavorite()">
+          {{ isFavorite() ? '♥ Nos Favoritos' : '♡ Adicionar aos Favoritos' }}
+        </button>
+
+        <div class="trust-badges">
+          <div><span>🛡</span><div><strong>Compra Segura</strong><small>Seus dados protegidos</small></div></div>
+          @if (product.freeShipping) {
+            <div><span>🚚</span><div><strong>Frete Grátis</strong><small>Para este produto</small></div></div>
+          }
+          <div><span>↩</span><div><strong>Devolução Fácil</strong><small>Até 7 dias após recebimento</small></div></div>
+        </div>
+
+        <p class="sold-by">Vendido e entregue por <strong>{{ product.soldBy }}</strong></p>
+      </div>
+    </div>
+
+    <div class="pd-tabs">
+      <div class="tabs-header">
+        <button type="button" [class.active]="activeTab() === 'descricao'" (click)="setTab('descricao')">Descrição</button>
+        <button type="button" [class.active]="activeTab() === 'especificacoes'" (click)="setTab('especificacoes')">Especificações</button>
+        <button type="button" [class.active]="activeTab() === 'avaliacoes'" (click)="setTab('avaliacoes')">Avaliações ({{ product.reviewsCount }})</button>
+        <button type="button" [class.active]="activeTab() === 'faq'" (click)="setTab('faq')">Perguntas Frequentes</button>
+      </div>
+
+      <div class="tabs-body">
+        @switch (activeTab()) {
+          @case ('descricao') {
+            <p>{{ product.description }}</p>
+          }
+          @case ('especificacoes') {
+            <table class="specs-table">
+              <tbody>
+                @for (s of product.specs; track s.label) {
+                  <tr><td>{{ s.label }}</td><td>{{ s.value }}</td></tr>
+                }
+              </tbody>
+            </table>
+          }
+          @case ('avaliacoes') {
+            <div class="reviews-summary">
+              <div class="reviews-score">
+                <strong>{{ product.rating.toFixed(1) }}</strong>
+                <app-star-rating [rating]="product.rating" />
+                <span>{{ product.reviewsCount }} avaliações</span>
+              </div>
+            </div>
+            <div class="reviews-list">
+              @for (r of product.reviews; track r.id) {
+                <div class="review">
+                  <div class="review-head">
+                    <strong>{{ r.author }}</strong>
+                    <app-star-rating [rating]="r.rating" />
+                  </div>
+                  <p>{{ r.comment }}</p>
+                  <span class="review-date">{{ r.date }}</span>
+                </div>
+              }
+            </div>
+          }
+          @case ('faq') {
+            <div class="faq-list">
+              @for (f of product.faq; track f.question) {
+                <details class="faq-item">
+                  <summary>{{ f.question }}</summary>
+                  <p>{{ f.answer }}</p>
+                </details>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    @if (related().length) {
+      <div class="section-title related-title">
+        <h2>Produtos que combinam</h2>
+      </div>
+      <div class="grid-products">
+        @for (p of related(); track p.id) {
+          <app-product-card [product]="p" />
+        }
+      </div>
+    }
+  </div>
+}

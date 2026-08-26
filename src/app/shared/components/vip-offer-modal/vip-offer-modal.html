@@ -1,0 +1,21 @@
+<div class="vip-modal-overlay" (click)="onCancel()">
+  <div class="vip-modal" (click)="$event.stopPropagation()">
+    <button type="button" class="close-btn" (click)="onCancel()" aria-label="Fechar">✕</button>
+
+    <span class="vip-badge">🎉 Oferta Especial</span>
+    <h2>Torne-se um membro <span class="text-gradient">Nexus VIP</span>!</h2>
+    <p class="subtitle">Desbloqueie benefícios exclusivos na Nexus Store, sem nenhum custo:</p>
+
+    <ul class="benefits">
+      <li><span>🏷️</span> Cupons exclusivos com até <strong>30% OFF</strong></li>
+      <li><span>⭐</span> Acesso antecipado a produtos <strong>exclusivos</strong></li>
+      <li><span>🚚</span> Prioridade em promoções e lançamentos</li>
+      <li><span>🎁</span> Ofertas especiais só para membros VIP</li>
+    </ul>
+
+    <div class="vip-actions">
+      <button type="button" class="btn btn-exclusive btn-block" (click)="onConfirm()">Sim, quero ser VIP! 🎉</button>
+      <button type="button" class="btn btn-ghost btn-block" (click)="onCancel()">Agora não</button>
+    </div>
+  </div>
+</div>

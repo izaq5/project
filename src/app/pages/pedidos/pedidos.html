@@ -1,0 +1,48 @@
+<div class="container page pedidos-page">
+  <div class="page-header">
+    <h1>📦 Meus Pedidos</h1>
+    <p>{{ orderService.orders().length }} pedido(s) realizados</p>
+  </div>
+
+  @if (orderService.orders().length) {
+    <div class="orders-list">
+      @for (order of orderService.orders(); track order.id) {
+        <div class="order-card card">
+          <div class="order-head">
+            <div>
+              <strong>Pedido #{{ order.number }}</strong>
+              <span class="order-date">{{ formatDate(order.date) }}</span>
+            </div>
+            <span class="badge" [class.badge-primary]="order.status === 'processando'" [class.badge-success]="order.status === 'entregue'" [class.badge-outline]="order.status === 'enviado'">
+              {{ statusLabel(order.status) }}
+            </span>
+          </div>
+
+          <div class="order-items">
+            @for (item of order.items; track item.product.id) {
+              <a class="order-item" [routerLink]="['/produtos', item.product.id]">
+                <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                <div>
+                  <strong>{{ item.product.name }}</strong>
+                  <small>Qtd: {{ item.quantity }}</small>
+                </div>
+              </a>
+            }
+          </div>
+
+          <div class="order-footer">
+            <span>Pagamento: <strong>{{ order.paymentMethod.toUpperCase() }}</strong></span>
+            <span class="order-total">Total: <strong>R$ {{ order.total.toFixed(2).replace('.', ',') }}</strong></span>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>Você ainda não fez nenhum pedido</h3>
+      <p>Explore nossos produtos e faça sua primeira compra.</p>
+      <a routerLink="/produtos" class="btn btn-primary">Ver Produtos</a>
+    </div>
+  }
+</div>

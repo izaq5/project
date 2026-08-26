@@ -1,0 +1,255 @@
+<div class="container page checkout-page">
+  <h1>Checkout</h1>
+  <nav class="breadcrumb">
+    <a routerLink="/">Home</a> <span>›</span> <a routerLink="/carrinho">Carrinho</a> <span>›</span> <span>Checkout</span>
+  </nav>
+
+  @if (cartService.isEmpty() && !finishedOrder()) {
+    <div class="empty-state">
+      <div class="empty-icon">🛒</div>
+      <h3>Seu carrinho está vazio</h3>
+      <p>Adicione produtos antes de finalizar a compra.</p>
+      <a routerLink="/produtos" class="btn btn-primary">Ver Produtos</a>
+    </div>
+  } @else {
+    <div class="stepper-header">
+      <div class="step-item" [class.active]="step() === 1" [class.done]="step() > 1">
+        <span class="step-num">1</span>
+        <div><strong>Entrega</strong><small>Informações de entrega</small></div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" [class.active]="step() === 2" [class.done]="step() > 2">
+        <span class="step-num">2</span>
+        <div><strong>Pagamento</strong><small>Método de pagamento</small></div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" [class.active]="step() === 3">
+        <span class="step-num">3</span>
+        <div><strong>Confirmação</strong><small>Revisão do pedido</small></div>
+      </div>
+    </div>
+
+    <div class="checkout-layout">
+      <div class="checkout-main">
+        @if (step() === 1) {
+          <form [formGroup]="addressForm" class="card block">
+            <h3>🚚 Informações de Entrega</h3>
+            <p class="block-sub">Preencha seus dados para entrega</p>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Nome completo <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('name')" formControlName="name" placeholder="João da Silva" />
+              </div>
+              <div class="field">
+                <label>Telefone <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('phone')" formControlName="phone" placeholder="(11) 98765-4321" />
+              </div>
+            </div>
+
+            <div class="form-row three">
+              <div class="field">
+                <label>CEP <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('cep')" formControlName="cep" placeholder="01310-100" />
+              </div>
+              <div class="field">
+                <label>Estado <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('state')" formControlName="state" placeholder="SP" />
+              </div>
+              <div class="field">
+                <label>Cidade <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('city')" formControlName="city" placeholder="São Paulo" />
+              </div>
+            </div>
+
+            <div class="form-row three">
+              <div class="field" style="grid-column: span 2">
+                <label>Endereço <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('street')" formControlName="street" placeholder="Avenida Paulista" />
+              </div>
+              <div class="field">
+                <label>Número <span class="req">*</span></label>
+                <input class="input" [class.invalid]="field('number')" formControlName="number" placeholder="1000" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Complemento</label>
+              <input class="input" formControlName="complement" placeholder="Apto 42 (opcional)" />
+            </div>
+
+            <div class="divider"></div>
+
+            <h3>📦 Tipo de Entrega</h3>
+            <p class="block-sub">Escolha o tipo de entrega</p>
+
+            <div class="shipping-options">
+              <button type="button" class="shipping-card" [class.selected]="shippingType() === 'padrao'" (click)="selectShipping('padrao')">
+                <span class="radio-dot"></span>
+                <div><strong>Entrega Padrão</strong><small>5 a 10 dias úteis</small></div>
+                <span class="price">R$ 14,90</span>
+              </button>
+              <button type="button" class="shipping-card" [class.selected]="shippingType() === 'expressa'" (click)="selectShipping('expressa')">
+                <span class="radio-dot"></span>
+                <div><strong>Entrega Expressa</strong><small>2 a 4 dias úteis</small></div>
+                <span class="price">R$ 24,90</span>
+              </button>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block btn-lg next-btn" (click)="goToStep(2)">Continuar para Pagamento →</button>
+          </form>
+        }
+
+        @if (step() === 2) {
+          <div class="card block">
+            <h3>💳 Método de Pagamento</h3>
+            <p class="block-sub">Escolha como deseja pagar</p>
+
+            <div class="payment-tabs">
+              <button type="button" [class.active]="paymentMethod() === 'pix'" (click)="selectPayment('pix')">PIX</button>
+              <button type="button" [class.active]="paymentMethod() === 'cartao'" (click)="selectPayment('cartao')">Cartão de Crédito</button>
+              <button type="button" [class.active]="paymentMethod() === 'boleto'" (click)="selectPayment('boleto')">Boleto Bancário</button>
+            </div>
+
+            @switch (paymentMethod()) {
+              @case ('pix') {
+                <div class="payment-panel">
+                  <span class="payment-icon">💠</span>
+                  <div>
+                    <strong>Pagamento via PIX</strong>
+                    <p>Após finalizar o pedido, você receberá o código PIX para pagamento.</p>
+                    <span class="badge badge-success">Aprovação imediata</span>
+                  </div>
+                </div>
+              }
+              @case ('cartao') {
+                <form [formGroup]="cardForm" class="card-form">
+                  <div class="field">
+                    <label>Número do cartão</label>
+                    <input class="input" formControlName="cardNumber" placeholder="0000 0000 0000 0000" />
+                  </div>
+                  <div class="field">
+                    <label>Nome no cartão</label>
+                    <input class="input" formControlName="cardName" placeholder="Como está no cartão" />
+                  </div>
+                  <div class="form-row">
+                    <div class="field">
+                      <label>Validade</label>
+                      <input class="input" formControlName="cardExpiry" placeholder="MM/AA" />
+                    </div>
+                    <div class="field">
+                      <label>CVV</label>
+                      <input class="input" formControlName="cardCvv" placeholder="123" />
+                    </div>
+                  </div>
+                  <span class="badge badge-outline">Em até 12x sem juros</span>
+                </form>
+              }
+              @case ('boleto') {
+                <div class="payment-panel">
+                  <span class="payment-icon">🧾</span>
+                  <div>
+                    <strong>Pagamento via Boleto</strong>
+                    <p>O boleto será gerado após a confirmação e enviado para o seu e-mail. Prazo de compensação de até 2 dias úteis.</p>
+                  </div>
+                </div>
+              }
+            }
+
+            <div class="divider"></div>
+
+            <h3>🏷 Cupom de Desconto</h3>
+            <div class="coupon-row">
+              <input
+                class="input"
+                placeholder="Digite seu cupom"
+                [value]="couponInput()"
+                (input)="couponInput.set($any($event.target).value)"
+              />
+              <button type="button" class="btn btn-ghost" (click)="applyCoupon()">Aplicar Cupom</button>
+            </div>
+
+            @if (appliedCoupon()) {
+              <div class="coupon-applied">
+                <span>Cupom <strong>{{ appliedCoupon()!.code }}</strong> aplicado ({{ appliedCoupon()!.discountPercent }}% OFF)</span>
+                <button type="button" (click)="removeCoupon()">Remover</button>
+              </div>
+            } @else if (couponMessage()) {
+              <p class="coupon-msg" [class.error]="couponMessage()!.type === 'error'">{{ couponMessage()!.text }}</p>
+            }
+
+            <p class="coupons-hint">Cupons disponíveis: <strong>BEMVINDO10</strong> (10% OFF) · <strong>PREMIUM15</strong> (15% OFF) &nbsp;|&nbsp; Exclusivos VIP: <strong>NEXUSVIP</strong> (25% OFF) · <strong>BLACK30</strong> (30% OFF)</p>
+
+            <div class="step-actions">
+              <button type="button" class="btn btn-outline" (click)="goToStep(1)">← Voltar</button>
+              <button type="button" class="btn btn-primary btn-block btn-lg" (click)="finishOrder()" [disabled]="submitting()">
+                {{ submitting() ? 'Processando...' : '🔒 Finalizar Compra' }}
+              </button>
+            </div>
+            <p class="redirect-note">Você será redirecionado para a página de confirmação</p>
+          </div>
+        }
+
+        @if (step() === 3 && finishedOrder(); as order) {
+          <div class="card block confirmation">
+            <div class="success-icon">✓</div>
+            <h2>Pedido realizado com sucesso!</h2>
+            <p class="order-number-label">Número do pedido</p>
+            <p class="order-number">{{ order.number }}</p>
+            <p>Enviamos os detalhes do seu pedido para o e-mail cadastrado.</p>
+            <button type="button" class="btn btn-primary" (click)="continueShopping()">Continuar Comprando</button>
+          </div>
+        }
+      </div>
+
+      <aside class="summary card">
+        <h3>📋 Resumo do Pedido <span class="items-count">({{ cartService.items().length + (finishedOrder()?.items?.length ?? 0) }} itens)</span></h3>
+
+        @for (item of (finishedOrder() ? finishedOrder()!.items : cartService.items()); track item.product.id) {
+          <div class="summary-item">
+            <img [src]="item.product.images[0]" [alt]="item.product.name" />
+            <div>
+              <strong>{{ item.product.name }}</strong>
+              <small>Quantidade: {{ item.quantity }}</small>
+            </div>
+            <span>R$ {{ (item.product.price * item.quantity).toFixed(2).replace('.', ',') }}</span>
+          </div>
+        }
+
+        <div class="divider"></div>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>R$ {{ (finishedOrder() ? finishedOrder()!.subtotal : cartService.subtotal()).toFixed(2).replace('.', ',') }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Frete</span>
+          <span>R$ {{ (finishedOrder() ? finishedOrder()!.shipping : shippingCost).toFixed(2).replace('.', ',') }}</span>
+        </div>
+        @if ((finishedOrder() ? finishedOrder()!.discount : discountAmount()) > 0) {
+          <div class="summary-row discount-row">
+            <span>Desconto @if (finishedOrder()?.couponCode || appliedCoupon()) { ({{ finishedOrder()?.couponCode || appliedCoupon()!.code }}) }</span>
+            <span>- R$ {{ (finishedOrder() ? finishedOrder()!.discount : discountAmount()).toFixed(2).replace('.', ',') }}</span>
+          </div>
+        }
+
+        <div class="divider"></div>
+
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span>R$ {{ (finishedOrder() ? finishedOrder()!.total : total()).toFixed(2).replace('.', ',') }}</span>
+        </div>
+
+        <div class="trust-box">
+          <strong>🛡 Compra 100% Segura</strong>
+          <p>Seus dados estão protegidos com criptografia de ponta.</p>
+          <div class="trust-icons">
+            <span>🔒 SSL SECURE</span>
+            <span>🕶 PRIVACIDADE PROTEGIDA</span>
+            <span>✅ COMPRA SEGURA</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</div>
