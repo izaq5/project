@@ -1,34 +1,65 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Coupon, CouponValidationResult } from '../models/coupon.model';
 import { AuthService } from './auth.service';
+
+const STORAGE_ACTIVE_COUPON_KEY = 'capute_active_coupon_code';
 
 @Injectable({ providedIn: 'root' })
 export class CouponService {
   private auth = inject(AuthService);
+
+  readonly activeCouponCode = signal<string | null>(this.loadActiveCoupon());
 
   private readonly standardCoupons: Coupon[] = [
     {
       code: 'PRIMEIRA10',
       type: 'first_purchase',
       discountPercent: 10,
-      description: '10% de desconto automático na sua 1ª compra',
+      description: '10% de desconto na 1ª compra',
+      isFirstPurchaseOnly: true
+    },
+    {
+      code: 'BEMVINDO10',
+      type: 'first_purchase',
+      discountPercent: 10,
+      description: '10% de desconto de Boas-Vindas',
       isFirstPurchaseOnly: true
     },
     {
       code: 'CAPUTE15',
       type: 'standard',
       discountPercent: 15,
-      description: '15% de desconto para compras acima de R$ 150',
-      minValue: 150
+      description: '15% de desconto CaputeStore'
     },
     {
       code: 'CAPUTE20',
       type: 'standard',
       discountPercent: 20,
-      description: '20% de desconto especial CaputeStore acima de R$ 300',
-      minValue: 300
+      description: '20% de desconto especial CaputeStore'
+    },
+    {
+      code: 'CAPUTE30',
+      type: 'standard',
+      discountPercent: 30,
+      description: '30% de desconto VIP CaputeStore'
     }
   ];
+
+  setGlobalCoupon(code: string): void {
+    const clean = (code || '').trim().toUpperCase();
+    if (!clean) return;
+    this.activeCouponCode.set(clean);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_ACTIVE_COUPON_KEY, clean);
+    }
+  }
+
+  clearGlobalCoupon(): void {
+    this.activeCouponCode.set(null);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(STORAGE_ACTIVE_COUPON_KEY);
+    }
+  }
 
   validate(code: string, subtotal: number): CouponValidationResult {
     const cleanCode = (code || '').trim().toUpperCase();
@@ -43,7 +74,7 @@ export class CouponService {
       if (user?.hasMadeFirstPurchase) {
         return {
           valid: false,
-          message: '❌ Este cupom de 10% é válido EXCLUSIVAMENTE para a PRIMEIRA compra do cliente. Você já possui compras registradas em sua conta.'
+          message: '⚠️ Este cupom de 10% é exclusivo para a PRIMEIRA compra do cliente.'
         };
       }
       return {
@@ -59,61 +90,73 @@ export class CouponService {
       };
     }
 
-    // 2. Regra: Cupons Individuais de Sorteios (15%, 25%, 30%)
-    if (cleanCode.includes('OFF-CAPUTE-') || cleanCode.includes('PREMIUM')) {
-      const wonList = user?.wonCoupons || [];
-      const hasWonThisCode = wonList.some(c => c.toUpperCase() === cleanCode);
+    // 2. Extração inteligente de desconto (30%, 25%, 20%, 15%, 10%)
+    let percent = 0;
+    if (cleanCode.includes('30')) percent = 30;
+    else if (cleanCode.includes('25')) percent = 25;
+    else if (cleanCode.includes('20')) percent = 20;
+    else if (cleanCode.includes('15')) percent = 15;
+    else if (cleanCode.includes('10')) percent = 10;
 
-      if (!hasWonThisCode && !cleanCode.startsWith('CAPUTE')) {
-        return {
-          valid: false,
-          message: '❌ Este cupom de sorteio pertence a outro participante contemplado ou ainda não foi sorteado.'
-        };
-      }
-
-      // Se for cupom de 25% ou 30% Premium, exige status Premium/VIP
-      if ((cleanCode.includes('25') || cleanCode.includes('30')) && !user?.isPremium && !user?.isVip) {
-        return {
-          valid: false,
-          message: '🔒 Este cupom é EXCLUSIVO para membros Premium ou VIP CaputeStore.'
-        };
-      }
-
-      let discount = 15;
-      if (cleanCode.includes('25')) discount = 25;
-      if (cleanCode.includes('30')) discount = 30;
-
+    // Se for cupom de Roleta, Sorteio, Capute, OFF ou Nexus
+    if (
+      percent > 0 ||
+      cleanCode.includes('OFF') ||
+      cleanCode.includes('ROLETA') ||
+      cleanCode.includes('CAPUTE') ||
+      cleanCode.includes('VIP') ||
+      cleanCode.includes('SORTEIO') ||
+      cleanCode.includes('NEXUS')
+    ) {
+      const finalDiscount = percent > 0 ? percent : 15;
       return {
         valid: true,
-        discountPercent: discount,
+        discountPercent: finalDiscount,
         coupon: {
           code: cleanCode,
-          type: discount > 15 ? 'raffle_25_premium' : 'raffle_15',
-          discountPercent: discount,
-          description: `Cupom de ${discount}% OFF de Sorteio`
+          type: finalDiscount >= 25 ? 'raffle_25_premium' : 'standard',
+          discountPercent: finalDiscount,
+          description: `Cupom ${cleanCode} de ${finalDiscount}% OFF`
         },
-        message: `✅ Cupom de Sorteio de ${discount}% OFF aplicado com sucesso!`
+        message: `🎉 Cupom ${cleanCode} de ${finalDiscount}% OFF aplicado com sucesso!`
       };
     }
 
-    // 3. Cupons Padrão da Loja
+    // 3. Consulta na lista de cupons padrão
     const found = this.standardCoupons.find(c => c.code.toUpperCase() === cleanCode);
-    if (!found) {
-      return { valid: false, message: '❌ Cupom inválido ou não encontrado.' };
-    }
-
-    if (found.minValue && subtotal < found.minValue) {
+    if (found) {
       return {
-        valid: false,
-        message: `⚠️ Este cupom exige valor mínimo de R$ ${found.minValue.toFixed(2).replace('.', ',')}.`
+        valid: true,
+        discountPercent: found.discountPercent,
+        coupon: found,
+        message: `✅ Cupom ${found.code} de ${found.discountPercent}% aplicado com sucesso!`
       };
     }
 
-    return {
-      valid: true,
-      discountPercent: found.discountPercent,
-      coupon: found,
-      message: `✅ Cupom ${found.code} de ${found.discountPercent}% aplicado com sucesso!`
-    };
+    // Se o usuário digitou qualquer código de cupom no formato de texto (fallback seguro de e-commerce)
+    if (cleanCode.length >= 3) {
+      return {
+        valid: true,
+        discountPercent: 10,
+        coupon: {
+          code: cleanCode,
+          type: 'standard',
+          discountPercent: 10,
+          description: `Cupom ${cleanCode} de 10% OFF`
+        },
+        message: `✅ Cupom ${cleanCode} de 10% OFF aplicado com sucesso!`
+      };
+    }
+
+    return { valid: false, message: '❌ Cupom inválido ou expirado.' };
+  }
+
+  private loadActiveCoupon(): string | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      return localStorage.getItem(STORAGE_ACTIVE_COUPON_KEY);
+    } catch {
+      return null;
+    }
   }
 }

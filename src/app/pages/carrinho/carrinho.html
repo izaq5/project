@@ -41,10 +41,49 @@
       <aside class="summary card">
         <h3>Resumo do Pedido <span class="items-count">({{ cartService.itemCount() }} itens)</span></h3>
 
+        <!-- CAMPO DE CUPOM DE DESCONTO NO CARRINHO -->
+        <div class="coupon-box-cart">
+          <label for="cart-coupon-input">🎟️ Possui um Cupom de Desconto?</label>
+          <div class="coupon-input-group">
+            <input
+              id="cart-coupon-input"
+              type="text"
+              class="input coupon-input"
+              placeholder="Ex: PRIMEIRA10, 30OFF-CAPUTE-8492"
+              [value]="couponInput()"
+              (input)="couponInput.set($any($event.target).value)"
+            />
+            <button type="button" class="btn btn-primary btn-sm" (click)="applyCoupon()">Aplicar</button>
+          </div>
+
+          @if (appliedCoupon()) {
+            <div class="applied-coupon-pill">
+              <span>🏷️ <strong>{{ appliedCoupon()?.code }}</strong> (-{{ appliedCoupon()?.discountPercent }}%)</span>
+              <button type="button" class="remove-coupon-btn" (click)="removeCoupon()" title="Remover cupom">✕</button>
+            </div>
+          }
+
+          @if (couponMessage()) {
+            <span class="coupon-msg" [class.error]="couponMessage()?.type === 'error'" [class.success]="couponMessage()?.type === 'success'">
+              {{ couponMessage()?.text }}
+            </span>
+          }
+        </div>
+
+        <div class="divider"></div>
+
         <div class="summary-row">
           <span>Subtotal</span>
           <span>R$ {{ cartService.subtotal().toFixed(2).replace('.', ',') }}</span>
         </div>
+
+        @if (appliedCoupon()) {
+          <div class="summary-row discount-row">
+            <span>Desconto ({{ appliedCoupon()?.discountPercent }}% OFF)</span>
+            <span class="text-success">- R$ {{ discountAmount().toFixed(2).replace('.', ',') }}</span>
+          </div>
+        }
+
         <div class="summary-row">
           <span>Frete</span>
           @if (shippingCost === 0) {
@@ -67,7 +106,7 @@
           <span>R$ {{ total.toFixed(2).replace('.', ',') }}</span>
         </div>
 
-        <a routerLink="/checkout" class="btn btn-primary btn-block">Finalizar Compra</a>
+        <a routerLink="/checkout" class="btn btn-primary btn-block btn-lg">Finalizar Compra</a>
       </aside>
     </div>
   }

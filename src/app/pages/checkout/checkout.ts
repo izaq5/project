@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
@@ -19,7 +19,7 @@ type ShippingType = 'padrao' | 'expressa';
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 })
-export class Checkout {
+export class Checkout implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   cartService = inject(CartService);
@@ -126,16 +126,25 @@ export class Checkout {
     this.paymentMethod.set(method);
   }
 
-  applyCoupon(): void {
+  ngOnInit(): void {
+    const activeCode = this.couponService.activeCouponCode();
+    if (activeCode) {
+      this.couponInput.set(activeCode);
+      this.applyCoupon(false);
+    }
+  }
+
+  applyCoupon(showToast = true): void {
     const result = this.couponService.validate(this.couponInput(), this.cartService.subtotal());
     if (result.valid && result.coupon) {
       this.appliedCoupon.set(result.coupon);
       this.couponMessage.set({ type: 'success', text: result.message });
-      this.toastService.success(result.message);
+      this.couponService.setGlobalCoupon(result.coupon.code);
+      if (showToast) this.toastService.success(result.message);
     } else {
       this.appliedCoupon.set(null);
       this.couponMessage.set({ type: 'error', text: result.message });
-      this.toastService.error(result.message);
+      if (showToast) this.toastService.error(result.message);
     }
   }
 
@@ -143,6 +152,7 @@ export class Checkout {
     this.appliedCoupon.set(null);
     this.couponInput.set('');
     this.couponMessage.set(null);
+    this.couponService.clearGlobalCoupon();
   }
 
   finishOrder(): void {

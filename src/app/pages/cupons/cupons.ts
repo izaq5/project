@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { DrawService } from '../../core/services/draw.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { CouponService } from '../../core/services/coupon.service';
 
 export interface WinnerFeedItem {
   name: string;
@@ -21,6 +22,7 @@ export interface WinnerFeedItem {
 export class Cupons implements OnInit, OnDestroy {
   drawService = inject(DrawService);
   authService = inject(AuthService);
+  private couponService = inject(CouponService);
   private toastService = inject(ToastService);
   private router = inject(Router);
 
@@ -246,6 +248,7 @@ export class Cupons implements OnInit, OnDestroy {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(code).catch(() => {});
     }
+    this.couponService.setGlobalCoupon(code);
     this.copied.set(code);
     this.toastService.success(`Cupom ${code} copiado com sucesso!`);
     setTimeout(() => this.copied.set(null), 2000);
@@ -255,7 +258,8 @@ export class Cupons implements OnInit, OnDestroy {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(code).catch(() => {});
     }
-    this.toastService.success(`Cupom ${code} copiado! Redirecionando para o carrinho...`);
+    this.couponService.setGlobalCoupon(code);
+    this.toastService.success(`Cupom ${code} aplicado ao seu carrinho! Redirecionando...`);
     this.router.navigate(['/carrinho']);
   }
 }
