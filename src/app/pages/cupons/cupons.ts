@@ -27,6 +27,8 @@ export class Cupons implements OnInit, OnDestroy {
   copied = signal<string | null>(null);
   participating = signal<string | null>(null);
   selectedState = signal<string>('Todos');
+  selectedCategory = signal<string>('todos');
+  searchQuery = signal<string>('');
   loadingState = signal<boolean>(false);
   spinningWheel = signal<boolean>(false);
   rouletteResult = signal<{ discount: string; code: string } | null>(null);
@@ -38,29 +40,75 @@ export class Cupons implements OnInit, OnDestroy {
   private timerInterval: any;
 
   readonly brazilianStates = [
-    { code: 'Todos', name: '🇧🇷 Brasil Inteiro (Todos os Estados)' },
-    { code: 'SP', name: 'São Paulo (SP)' },
-    { code: 'RJ', name: 'Rio de Janeiro (RJ)' },
-    { code: 'MG', name: 'Minas Gerais (MG)' },
-    { code: 'RS', name: 'Rio Grande do Sul (RS)' },
-    { code: 'BA', name: 'Bahia (BA)' },
-    { code: 'PR', name: 'Paraná (PR)' },
-    { code: 'SC', name: 'Santa Catarina (SC)' },
-    { code: 'CE', name: 'Ceará (CE)' },
-    { code: 'PE', name: 'Pernambuco (PE)' },
-    { code: 'GO', name: 'Goiás (GO)' },
-    { code: 'DF', name: 'Distrito Federal (DF)' },
+    { code: 'Todos', name: '🇧🇷 Brasil Inteiro (Todos os 27 Estados)' },
+    { code: 'AC', name: 'Acre (AC)' },
+    { code: 'AL', name: 'Alagoas (AL)' },
+    { code: 'AP', name: 'Amapá (AP)' },
     { code: 'AM', name: 'Amazonas (AM)' },
+    { code: 'BA', name: 'Bahia (BA)' },
+    { code: 'CE', name: 'Ceará (CE)' },
+    { code: 'DF', name: 'Distrito Federal (DF)' },
+    { code: 'ES', name: 'Espírito Santo (ES)' },
+    { code: 'GO', name: 'Goiás (GO)' },
+    { code: 'MA', name: 'Maranhão (MA)' },
+    { code: 'MT', name: 'Mato Grosso (MT)' },
+    { code: 'MS', name: 'Mato Grosso do Sul (MS)' },
+    { code: 'MG', name: 'Minas Gerais (MG)' },
+    { code: 'PA', name: 'Pará (PA)' },
+    { code: 'PB', name: 'Paraíba (PB)' },
+    { code: 'PR', name: 'Paraná (PR)' },
+    { code: 'PE', name: 'Pernambuco (PE)' },
+    { code: 'PI', name: 'Piauí (PI)' },
+    { code: 'RJ', name: 'Rio de Janeiro (RJ)' },
+    { code: 'RN', name: 'Rio Grande do Norte (RN)' },
+    { code: 'RS', name: 'Rio Grande do Sul (RS)' },
+    { code: 'RO', name: 'Rondônia (RO)' },
+    { code: 'RR', name: 'Roraima (RR)' },
+    { code: 'SC', name: 'Santa Catarina (SC)' },
+    { code: 'SP', name: 'São Paulo (SP)' },
+    { code: 'SE', name: 'Sergipe (SE)' },
+    { code: 'TO', name: 'Tocantins (TO)' },
   ];
 
+  private readonly stateCitiesMap: Record<string, string[]> = {
+    SP: ['São Paulo', 'Campinas', 'Santos', 'Ribeirão Preto', 'Sorocaba', 'Bauru'],
+    RJ: ['Rio de Janeiro', 'Niterói', 'Petrópolis', 'Volta Redonda', 'Macaé'],
+    MG: ['Belo Horizonte', 'Uberlândia', 'Juiz de Fora', 'Montes Claros'],
+    RS: ['Porto Alegre', 'Caxias do Sul', 'Pelotas', 'Canoas', 'Passo Fundo'],
+    BA: ['Salvador', 'Feira de Santana', 'Vitória da Conquista', 'Ilhéus'],
+    PR: ['Curitiba', 'Londrina', 'Maringá', 'Cascavel', 'Ponta Grossa'],
+    SC: ['Florianópolis', 'Joinville', 'Blumenau', 'Chapecó', 'Criciúma'],
+    CE: ['Fortaleza', 'Caucaia', 'Juazeiro do Norte', 'Sobral'],
+    PE: ['Recife', 'Jaboatão dos Guararapes', 'Olinda', 'Caruaru'],
+    GO: ['Goiânia', 'Aparecida de Goiânia', 'Anápolis', 'Rio Verde'],
+    DF: ['Brasília', 'Taguatinga', 'Ceilândia', 'Águas Claras'],
+    AM: ['Manaus', 'Parintins', 'Itacoatiara', 'Manacapuru'],
+    ES: ['Vitória', 'Vila Velha', 'Serra', 'Cariacica'],
+    MT: ['Cuiabá', 'Várzea Grande', 'Rondonópolis', 'Sinop'],
+    MS: ['Campo Grande', 'Dourados', 'Três Lagoas', 'Corumbá'],
+    PA: ['Belém', 'Ananindeua', 'Santarém', 'Marabá'],
+    MA: ['São Luís', 'Imperatriz', 'Timon', 'Caxias'],
+    PB: ['João Pessoa', 'Campina Grande', 'Santa Rita', 'Patos'],
+    RN: ['Natal', 'Mossoró', 'Parnamirim', 'Caicó'],
+    AL: ['Maceió', 'Arapiraca', 'Rio Largo', 'Palmeira dos Índios'],
+    PI: ['Teresina', 'Parnaíba', 'Picos', 'Floriano'],
+    SE: ['Aracaju', 'Nossa Senhora do Socorro', 'Lagarto', 'Itabaiana'],
+    RO: ['Porto Velho', 'Ji-Paraná', 'Ariquemes', 'Vilhena'],
+    AC: ['Rio Branco', 'Cruzeiro do Sul', 'Sena Madureira'],
+    AP: ['Macapá', 'Santana', 'Laranjal do Jari'],
+    RR: ['Boa Vista', 'Rorainópolis', 'Caracaraí'],
+    TO: ['Palmas', 'Araguaína', 'Gurupi', 'Porto Nacional'],
+  };
+
   private readonly initialWinners: WinnerFeedItem[] = [
-    { name: 'Carlos M.', cityState: 'São Paulo / SP', discount: '30% OFF', code: '30OFF-CAPUTE-8492', timeAgo: 'há 5 min' },
-    { name: 'Mariana S.', cityState: 'Salvador / BA', discount: '15% OFF', code: '15OFF-CAPUTE-3104', timeAgo: 'há 12 min' },
-    { name: 'Lucas F.', cityState: 'Porto Alegre / RS', discount: '25% OFF', code: '25OFF-CAPUTE-7193', timeAgo: 'há 28 min' },
-    { name: 'Beatriz R.', cityState: 'Curitiba / PR', discount: '10% OFF', code: 'PRIMEIRA10', timeAgo: 'há 45 min' },
-    { name: 'Felipe T.', cityState: 'Belo Horizonte / MG', discount: '30% OFF', code: '30OFF-CAPUTE-5241', timeAgo: 'há 1 hora' },
-    { name: 'Amanda C.', cityState: 'Recife / PE', discount: '15% OFF', code: '15OFF-CAPUTE-9812', timeAgo: 'há 2 horas' },
-    { name: 'Gabriel K.', cityState: 'Brasília / DF', discount: '25% OFF', code: '25OFF-CAPUTE-4410', timeAgo: 'há 3 horas' },
+    { name: 'Carlos M.', cityState: 'São Paulo / SP', discount: '30% OFF', code: '30OFF-CAPUTE-8492', timeAgo: 'há 4 min' },
+    { name: 'Mariana S.', cityState: 'Salvador / BA', discount: '15% OFF', code: '15OFF-CAPUTE-3104', timeAgo: 'há 10 min' },
+    { name: 'Lucas F.', cityState: 'Porto Alegre / RS', discount: '25% OFF', code: '25OFF-CAPUTE-7193', timeAgo: 'há 22 min' },
+    { name: 'Beatriz R.', cityState: 'Curitiba / PR', discount: '10% OFF', code: 'PRIMEIRA10', timeAgo: 'há 35 min' },
+    { name: 'Felipe T.', cityState: 'Belo Horizonte / MG', discount: '30% OFF', code: '30OFF-CAPUTE-5241', timeAgo: 'há 50 min' },
+    { name: 'Amanda C.', cityState: 'Recife / PE', discount: '15% OFF', code: '15OFF-CAPUTE-9812', timeAgo: 'há 1 hora' },
+    { name: 'Gabriel K.', cityState: 'Brasília / DF', discount: '25% OFF', code: '25OFF-CAPUTE-4410', timeAgo: 'há 2 horas' },
+    { name: 'Juliana P.', cityState: 'Florianópolis / SC', discount: '30% OFF', code: '30OFF-CAPUTE-9921', timeAgo: 'há 3 horas' },
   ];
 
   recentBrazilWinners = signal<WinnerFeedItem[]>(this.initialWinners);
@@ -113,18 +161,46 @@ export class Cupons implements OnInit, OnDestroy {
       if (uf === 'Todos') {
         this.recentBrazilWinners.set(this.initialWinners);
       } else {
-        const filtered = this.initialWinners.filter(w => w.cityState.includes(uf));
-        const extraWinner: WinnerFeedItem = {
-          name: 'Cliente Premiado',
-          cityState: `Região de ${uf}`,
-          discount: '25% OFF',
-          code: `25OFF-CAPUTE-${Math.floor(1000 + Math.random() * 9000)}`,
-          timeAgo: 'há 2 min'
-        };
-        this.recentBrazilWinners.set(filtered.length ? [extraWinner, ...filtered] : [extraWinner]);
+        const cities = this.stateCitiesMap[uf] || ['Capital'];
+        const randomCity = cities[Math.floor(Math.random() * cities.length)];
+        const names = ['Eduardo C.', 'Renata M.', 'Thiago S.', 'Aline P.', 'Marcelo F.', 'Vanessa L.'];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+
+        const stateSpecificWinners: WinnerFeedItem[] = [
+          {
+            name: randomName,
+            cityState: `${randomCity} / ${uf}`,
+            discount: '30% OFF',
+            code: `30OFF-CAPUTE-${Math.floor(1000 + Math.random() * 9000)}`,
+            timeAgo: 'há 1 min'
+          },
+          {
+            name: 'Cliente Premiado',
+            cityState: `Região de ${uf}`,
+            discount: '25% OFF',
+            code: `25OFF-CAPUTE-${Math.floor(1000 + Math.random() * 9000)}`,
+            timeAgo: 'há 8 min'
+          },
+          {
+            name: 'Ganhador Local',
+            cityState: `${cities[0]} / ${uf}`,
+            discount: '15% OFF',
+            code: `15OFF-CAPUTE-${Math.floor(1000 + Math.random() * 9000)}`,
+            timeAgo: 'há 24 min'
+          }
+        ];
+        this.recentBrazilWinners.set(stateSpecificWinners);
       }
-      this.toastService.info(`Servidores sincronizados para a região: ${uf}`);
+      this.toastService.info(`Servidores do estado (${uf}) conectados com sucesso!`);
     }, 450);
+  }
+
+  setCategoryFilter(cat: string): void {
+    this.selectedCategory.set(cat);
+  }
+
+  setSearchQuery(query: string): void {
+    this.searchQuery.set(query);
   }
 
   async participate(drawId: string): Promise<void> {

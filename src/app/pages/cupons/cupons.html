@@ -15,29 +15,86 @@
     </div>
   </div>
 
-  <!-- NATIONWIDE BANNER & STATE SELECTOR -->
+  <!-- NATIONWIDE BANNER & STATE / CATEGORY FILTER BAR -->
   <section class="coupon-section card brazil-banner-card">
     <div class="brazil-header">
-      <div class="brazil-badge">🇧🇷 COBERTURA NACIONAL AO VIVO</div>
+      <div class="brazil-badge">🇧🇷 COBERTURA NACIONAL AO VIVO (27 ESTADOS)</div>
       <h2>Sorteios de Cupons em Todos os Estados do Brasil</h2>
-      <p>Independentemente de onde você mora no Brasil, você pode participar dos sorteios diários e resgatar seus cupons de 15%, 25% e 30% OFF!</p>
+      <p>
+        @if (selectedState() === 'Todos') {
+          Exibindo sorteios ativos para todo o território brasileiro.
+        } @else {
+          Exibindo sorteios regionais sincronizados para <strong>{{ selectedState() }}</strong>.
+        }
+      </p>
     </div>
 
-    <div class="state-filter-box">
-      <label for="state-select">📍 Selecione o seu estado (UF) para sincronizar sorteios regionais:</label>
-      <select id="state-select" class="input state-select" [value]="selectedState()" (change)="onStateChange($any($event.target).value)">
-        @for (st of brazilianStates; track st.code) {
-          <option [value]="st.code">{{ st.name }}</option>
-        }
-      </select>
+    <!-- PAINEL DE FILTROS AVANÇADOS -->
+    <div class="coupon-filter-bar card">
+      <div class="filter-row-top">
+        <div class="search-box-wrap">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            class="input search-input"
+            placeholder="Buscar cupom por código ou título..."
+            [value]="searchQuery()"
+            (input)="setSearchQuery($any($event.target).value)"
+          />
+        </div>
+
+        <div class="state-filter-wrap">
+          <label for="state-select">📍 Estado (UF):</label>
+          <select id="state-select" class="select state-select" [value]="selectedState()" (change)="onStateChange($any($event.target).value)">
+            @for (st of brazilianStates; track st.code) {
+              <option [value]="st.code">{{ st.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-tabs">
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="selectedCategory() === 'todos'"
+          (click)="setCategoryFilter('todos')"
+        >
+          ✨ Todos os Cupons
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="selectedCategory() === '10'"
+          (click)="setCategoryFilter('10')"
+        >
+          🎁 10% OFF (1ª Compra)
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="selectedCategory() === '15'"
+          (click)="setCategoryFilter('15')"
+        >
+          🎲 15% OFF (Geral)
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="selectedCategory() === 'vip'"
+          (click)="setCategoryFilter('vip')"
+        >
+          👑 25% &amp; 30% OFF (VIP)
+        </button>
+      </div>
     </div>
 
     <!-- FEED DE GANHADORES COM ANIMAÇÃO DE CARREGAMENTO -->
     <div class="live-winners-section">
       <div class="winners-header">
-        <h3>🔥 ÚLTIMOS CLIENTES CONTEMPLADOS PELO BRASIL</h3>
+        <h3>🔥 ÚLTIMOS CLIENTES CONTEMPLADOS EM {{ selectedState() === 'Todos' ? 'TODO O BRASIL' : selectedState() }}</h3>
         @if (loadingState()) {
-          <span class="feed-spinner">🔄 Atualizando servidores regionais...</span>
+          <span class="feed-spinner">🔄 Atualizando servidores de {{ selectedState() }}...</span>
         }
       </div>
 
@@ -65,152 +122,160 @@
   </section>
 
   <!-- SEÇÃO INTERATIVA: ROLETA DA SORTE CAPUTESTORE -->
-  <section class="coupon-section card roulette-card">
-    <div class="roulette-content">
-      <div class="roulette-info">
-        <span class="badge badge-primary">🎰 TESTE SUA SORTE</span>
-        <h2>Roleta da Sorte Instantânea CaputeStore</h2>
-        <p>Gire a roleta interativa para tentar conquistar um cupom exclusivo surpresa de até 30% OFF imediatamente!</p>
-      </div>
+  @if (selectedCategory() === 'todos' || selectedCategory() === 'vip') {
+    <section class="coupon-section card roulette-card">
+      <div class="roulette-content">
+        <div class="roulette-info">
+          <span class="badge badge-primary">🎰 TESTE SUA SORTE</span>
+          <h2>Roleta da Sorte Instantânea CaputeStore</h2>
+          <p>Gire a roleta interativa para tentar conquistar um cupom exclusivo surpresa de até 30% OFF imediatamente!</p>
+        </div>
 
-      <div class="roulette-action">
-        <button type="button" class="btn btn-primary btn-lg spin-btn" [disabled]="spinningWheel()" (click)="spinRoulette()">
-          @if (spinningWheel()) {
-            <span class="spin-loader">🎰 Girando Roleta...</span>
-          } @else {
-            🎰 GIRAR ROLETA AGORA
-          }
-        </button>
+        <div class="roulette-action">
+          <button type="button" class="btn btn-primary btn-lg spin-btn" [disabled]="spinningWheel()" (click)="spinRoulette()">
+            @if (spinningWheel()) {
+              <span class="spin-loader">🎰 Girando Roleta...</span>
+            } @else {
+              🎰 GIRAR ROLETA AGORA
+            }
+          </button>
 
-        @if (rouletteResult()) {
-          <div class="roulette-winner-box">
-            <span class="r-congrats">🎉 VOCÊ GANHOU!</span>
-            <div class="r-code-box">
-              <span class="r-discount">{{ rouletteResult()?.discount }}</span>
-              <code>{{ rouletteResult()?.code }}</code>
+          @if (rouletteResult()) {
+            <div class="roulette-winner-box">
+              <span class="r-congrats">🎉 VOCÊ GANHOU!</span>
+              <div class="r-code-box">
+                <span class="r-discount">{{ rouletteResult()?.discount }}</span>
+                <code>{{ rouletteResult()?.code }}</code>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" (click)="applyAndGoToCart(rouletteResult()!.code)">
+                🛒 Usar no Carrinho
+              </button>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" (click)="applyAndGoToCart(rouletteResult()!.code)">
-              🛒 Usar no Carrinho
-            </button>
-          </div>
-        }
+          }
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  }
 
   <!-- 1. CUPOM DE PRIMEIRA COMPRA (10% OFF) -->
-  <section class="coupon-section card">
-    <div class="section-title">
-      <h2><span class="badge badge-primary">NOVO CLIENTE</span> Cupom de Primeira Compra (10% OFF)</h2>
-    </div>
-    <div class="first-purchase-box">
-      <div class="coupon-tag">10% OFF</div>
-      <div class="coupon-details">
-        <strong>PRIMEIRA10 / BEMVINDO10</strong>
-        <p>Válido exclusivamente para a sua 1ª compra na CaputeStore. O sistema verifica automaticamente o seu histórico para evitar reutilização.</p>
-        @if (isFirstPurchaseAvailable) {
-          <span class="status-available">✅ Elegível para a sua próxima compra!</span>
-        } @else {
-          <span class="status-used">⚠️ Você já realizou sua primeira compra anteriormente.</span>
-        }
+  @if (selectedCategory() === 'todos' || selectedCategory() === '10') {
+    <section class="coupon-section card">
+      <div class="section-title">
+        <h2><span class="badge badge-primary">NOVO CLIENTE</span> Cupom de Primeira Compra (10% OFF)</h2>
       </div>
-      <div class="first-actions">
-        <button type="button" class="btn btn-primary" (click)="copyCode('PRIMEIRA10')">
-          {{ copied() === 'PRIMEIRA10' ? 'Copiado ✓' : 'Copiar Código' }}
-        </button>
-        <button type="button" class="btn btn-outline" (click)="applyAndGoToCart('PRIMEIRA10')">
-          🛒 Usar no Carrinho
-        </button>
+      <div class="first-purchase-box">
+        <div class="coupon-tag">10% OFF</div>
+        <div class="coupon-details">
+          <strong>PRIMEIRA10 / BEMVINDO10</strong>
+          <p>Válido exclusivamente para a sua 1ª compra na CaputeStore. O sistema verifica automaticamente o seu histórico para evitar reutilização.</p>
+          @if (isFirstPurchaseAvailable) {
+            <span class="status-available">✅ Elegível para a sua próxima compra!</span>
+          } @else {
+            <span class="status-used">⚠️ Você já realizou sua primeira compra anteriormente.</span>
+          }
+        </div>
+        <div class="first-actions">
+          <button type="button" class="btn btn-primary" (click)="copyCode('PRIMEIRA10')">
+            {{ copied() === 'PRIMEIRA10' ? 'Copiado ✓' : 'Copiar Código' }}
+          </button>
+          <button type="button" class="btn btn-outline" (click)="applyAndGoToCart('PRIMEIRA10')">
+            🛒 Usar no Carrinho
+          </button>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  }
 
   <!-- 2. SORTEIO DE CUPONS NORMAIS (15% OFF - 25 CUPONS) -->
-  <section class="coupon-section">
-    <div class="section-title">
-      <h2>🎁 Sorteio Nacional de Cupons de 15% OFF (25 Contemplados)</h2>
-    </div>
-
-    @for (c of drawService.campaigns(); track c.id) {
-      @if (c.id === 'raffle_15') {
-        <div class="raffle-card card">
-          <div class="raffle-header">
-            <span class="raffle-percent">15% OFF</span>
-            <div class="raffle-info">
-              <h3>{{ c.title }}</h3>
-              <p>Distribuído entre os clientes cadastrados participantes de todo o Brasil. Cada ganhador recebe seu próprio código individual.</p>
-              <div class="quota-progress">
-                <span>Cotas distribuídas nacionalmente: <strong>{{ c.claimedCount }} / {{ c.totalCoupons }}</strong></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="raffle-actions">
-            @if (authService.isLoggedIn()) {
-              <button type="button" class="btn btn-primary" [disabled]="participating() === c.id" (click)="participate(c.id)">
-                @if (participating() === c.id) {
-                  <span class="spin-loader">🎲 Processando Sorteio...</span>
-                } @else {
-                  🎲 PARTICIPAR DO SORTEIO BRASIL 15%
-                }
-              </button>
-            } @else {
-              <a routerLink="/login" class="btn btn-outline">Faça Login para Participar</a>
-            }
-          </div>
-        </div>
-      }
-    }
-  </section>
-
-  <!-- 3. SORTEIOS PREMIUM & VIP (25% & 30% OFF) -->
-  <section class="coupon-section">
-    <div class="section-title">
-      <h2><span class="badge badge-vip">👑 PREMIUM &amp; VIP</span> Sorteios Exclusivos Brasil (25% e 30% OFF)</h2>
-    </div>
-
-    @if (!authService.isPremium()) {
-      <div class="vip-banner card">
-        <div class="vip-banner-text">
-          <p>🔒 Estes sorteios são restritos a membros <strong>Premium e VIP CaputeStore</strong>. Assine o Plano VIP por apenas <strong>R$ 20,00</strong> para desbloquear!</p>
-        </div>
-        <a routerLink="/vip" class="btn btn-vip">QUERO SER VIP (R$ 20,00)</a>
+  @if (selectedCategory() === 'todos' || selectedCategory() === '15') {
+    <section class="coupon-section">
+      <div class="section-title">
+        <h2>🎁 Sorteio Nacional de Cupons de 15% OFF (25 Contemplados)</h2>
       </div>
-    }
 
-    <div class="grid-raffles">
       @for (c of drawService.campaigns(); track c.id) {
-        @if (c.requiresPremium) {
-          <div class="raffle-card card premium-raffle" [class.locked]="!authService.isPremium()">
+        @if (c.id === 'raffle_15') {
+          <div class="raffle-card card">
             <div class="raffle-header">
-              <span class="raffle-percent vip-percent">{{ c.discount }}% OFF</span>
+              <span class="raffle-percent">15% OFF</span>
               <div class="raffle-info">
                 <h3>{{ c.title }}</h3>
-                <p>Cota total de <strong>{{ c.totalCoupons }} cupons</strong> exclusivos para clientes Premium/VIP do Brasil.</p>
+                <p>Distribuído entre os clientes cadastrados participantes de todo o Brasil. Cada ganhador recebe seu próprio código individual.</p>
                 <div class="quota-progress">
-                  <span>Disponíveis: <strong>{{ c.totalCoupons - c.claimedCount }} cupons restantes</strong></span>
+                  <span>Cotas distribuídas nacionalmente: <strong>{{ c.claimedCount }} / {{ c.totalCoupons }}</strong></span>
                 </div>
               </div>
             </div>
 
             <div class="raffle-actions">
-              @if (authService.isPremium()) {
-                <button type="button" class="btn btn-vip" [disabled]="participating() === c.id" (click)="participate(c.id)">
+              @if (authService.isLoggedIn()) {
+                <button type="button" class="btn btn-primary" [disabled]="participating() === c.id" (click)="participate(c.id)">
                   @if (participating() === c.id) {
-                    <span class="spin-loader">👑 Validando Cota VIP...</span>
+                    <span class="spin-loader">🎲 Processando Sorteio...</span>
                   } @else {
-                    👑 RESGATAR CUPOM {{ c.discount }}%
+                    🎲 PARTICIPAR DO SORTEIO BRASIL 15%
                   }
                 </button>
               } @else {
-                <a routerLink="/vip" class="btn btn-outline">🔒 Desbloquear com Plano VIP (R$ 20)</a>
+                <a routerLink="/login" class="btn btn-outline">Faça Login para Participar</a>
               }
             </div>
           </div>
         }
       }
-    </div>
-  </section>
+    </section>
+  }
+
+  <!-- 3. SORTEIOS PREMIUM & VIP (25% & 30% OFF) -->
+  @if (selectedCategory() === 'todos' || selectedCategory() === 'vip') {
+    <section class="coupon-section">
+      <div class="section-title">
+        <h2><span class="badge badge-vip">👑 PREMIUM &amp; VIP</span> Sorteios Exclusivos Brasil (25% e 30% OFF)</h2>
+      </div>
+
+      @if (!authService.isPremium()) {
+        <div class="vip-banner card">
+          <div class="vip-banner-text">
+            <p>🔒 Estes sorteios são restritos a membros <strong>Premium e VIP CaputeStore</strong>. Assine o Plano VIP por apenas <strong>R$ 20,00</strong> para desbloquear!</p>
+          </div>
+          <a routerLink="/vip" class="btn btn-vip">QUERO SER VIP (R$ 20,00)</a>
+        </div>
+      }
+
+      <div class="grid-raffles">
+        @for (c of drawService.campaigns(); track c.id) {
+          @if (c.requiresPremium) {
+            <div class="raffle-card card premium-raffle" [class.locked]="!authService.isPremium()">
+              <div class="raffle-header">
+                <span class="raffle-percent vip-percent">{{ c.discount }}% OFF</span>
+                <div class="raffle-info">
+                  <h3>{{ c.title }}</h3>
+                  <p>Cota total de <strong>{{ c.totalCoupons }} cupons</strong> exclusivos para clientes Premium/VIP do Brasil.</p>
+                  <div class="quota-progress">
+                    <span>Disponíveis: <strong>{{ c.totalCoupons - c.claimedCount }} cupons restantes</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="raffle-actions">
+                @if (authService.isPremium()) {
+                  <button type="button" class="btn btn-vip" [disabled]="participating() === c.id" (click)="participate(c.id)">
+                    @if (participating() === c.id) {
+                      <span class="spin-loader">👑 Validando Cota VIP...</span>
+                    } @else {
+                      👑 RESGATAR CUPOM {{ c.discount }}%
+                    }
+                  </button>
+                } @else {
+                  <a routerLink="/vip" class="btn btn-outline">🔒 Desbloquear com Plano VIP (R$ 20)</a>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  }
 
   <!-- MEUS CUPONS RESGATADOS -->
   @if (userWonCoupons.length > 0) {

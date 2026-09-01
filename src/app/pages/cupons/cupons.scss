@@ -67,21 +67,87 @@
     p { color: var(--text-muted); font-size: 0.9rem; margin: 0; }
   }
 
-  .state-filter-box {
+  /* PAINEL DE FILTROS AVANÇADOS */
+  .coupon-filter-bar {
     background: var(--surface-2);
-    padding: 16px;
+    padding: 18px;
     border-radius: var(--radius-md);
     margin-bottom: 24px;
-    label { font-size: 0.85rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 8px; }
-    .state-select {
-      width: 100%;
-      max-width: 400px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .filter-row-top {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box-wrap {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      align-items: center;
       background: var(--surface);
-      color: #fff;
       border: 1px solid var(--border);
-      padding: 10px 14px;
       border-radius: var(--radius-sm);
-      font-weight: 600;
+      padding: 0 12px;
+
+      .search-icon { font-size: 0.9rem; color: var(--text-muted); margin-right: 8px; }
+      .search-input {
+        background: transparent;
+        border: none;
+        padding: 10px 0;
+        outline: none;
+        color: #fff;
+        font-size: 0.9rem;
+        width: 100%;
+        &::placeholder { color: var(--text-faint); }
+      }
+    }
+
+    .state-filter-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      label { font-size: 0.85rem; font-weight: 700; color: #fff; white-space: nowrap; }
+      .state-select {
+        min-width: 240px;
+        background: var(--surface);
+        color: #fff;
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+      }
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+
+      .tab-btn {
+        background: var(--surface);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover, &.active {
+          background: var(--primary);
+          color: #000;
+          border-color: var(--primary);
+        }
+      }
     }
   }
 
