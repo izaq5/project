@@ -42,18 +42,18 @@ export class Home implements OnInit, OnDestroy {
       ctaText: 'VER OFERTAS',
       ctaLink: '/produtos',
       ctaClass: 'btn-primary',
-      imageUrl: 'https://picsum.photos/seed/capute-tech-hero/800/600'
+      imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop'
     },
     {
       id: 2,
-      badge: '👑 EXCLUSIVO NEXUS VIP',
+      badge: '👑 EXCLUSIVO CAPUTESTORE VIP',
       badgeType: 'vip',
       title: 'SORTEIOS DE CUPONS DE ATÉ 30% OFF',
       subtitle: 'Assine o Plano VIP por R$ 20,00 e ganhe acesso ao grupo do WhatsApp + sorteios de 25% e 30% OFF!',
       ctaText: 'QUERO SER VIP (R$ 20)',
       ctaLink: '/vip',
       ctaClass: 'btn-vip',
-      imageUrl: 'https://picsum.photos/seed/capute-vip-banner/800/600'
+      imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop'
     },
     {
       id: 3,
@@ -64,7 +64,7 @@ export class Home implements OnInit, OnDestroy {
       ctaText: 'EXPLORAR LANÇAMENTOS',
       ctaLink: '/produtos',
       ctaClass: 'btn-outline',
-      imageUrl: 'https://picsum.photos/seed/capute-launch-banner/800/600'
+      imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop'
     }
   ];
 

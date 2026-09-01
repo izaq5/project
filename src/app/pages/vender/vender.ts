@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -8,7 +8,7 @@ import { Product } from '../../core/models/product.model';
 
 @Component({
   selector: 'app-vender',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './vender.html',
   styleUrl: './vender.scss',
 })
@@ -51,9 +51,9 @@ export class Vender {
 
     this.submitting.set(true);
     const data = this.form.getRawValue();
-    const sellerName = this.authService.currentUser()?.name ?? 'Vendedor Nexus';
+    const sellerName = this.authService.currentUser()?.name ?? 'Vendedor Capute';
     const id = `seller-${Date.now()}`;
-    const fallbackImage = `https://picsum.photos/seed/${id}/700/700`;
+    const fallbackImage = `https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop`;
 
     const newProduct: Product = {
       id,

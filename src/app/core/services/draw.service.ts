@@ -49,62 +49,66 @@ export class DrawService {
   }
 
   participateInDraw(drawId: string): Promise<{ success: boolean; code?: string; message: string }> {
-    const user = this.auth.currentUser();
-    if (!user) {
-      this.toast.error('Você precisa estar logado para participar dos sorteios.');
-      return Promise.resolve({ success: false, message: 'Usuário não conectado.' });
-    }
-
-    const campaign = this._campaigns().find(c => c.id === drawId);
-    if (!campaign) {
-      return Promise.resolve({ success: false, message: 'Sorteio não encontrado.' });
-    }
-
-    // Regra Backend & Frontend: Verificação de Premium/VIP
-    if (campaign.requiresPremium && !user.isPremium && !user.isVip) {
-      const msg = 'Este sorteio de cupons é exclusivo para membros Premium/VIP! Faça seu upgrade VIP por R$ 20,00 para participar.';
-      this.toast.error(msg);
-      return Promise.resolve({ success: false, message: msg });
-    }
-
-    // Regra: Limite de cotas
-    if (campaign.claimedCount >= campaign.totalCoupons) {
-      const msg = 'Os cupons deste sorteio já foram totalmente distribuídos aos ganhadores!';
-      this.toast.error(msg);
-      return Promise.resolve({ success: false, message: msg });
-    }
-
-    // Regra: Duplicidade
-    if (campaign.winners?.includes(user.id) || user.wonCoupons?.some(c => c.startsWith(`${campaign.discount}OFF-`))) {
-      const msg = `Você já participou e foi contemplado neste sorteio de ${campaign.discount}%!`;
-      this.toast.info(msg);
-      return Promise.resolve({ success: false, message: msg });
-    }
-
-    // Gera cupom exclusivo
-    const winCode = `${campaign.discount}OFF-CAPUTE-${Math.floor(1000 + Math.random() * 9000)}`;
-
-    this._campaigns.update(list => list.map(c => {
-      if (c.id === drawId) {
-        return {
-          ...c,
-          claimedCount: c.claimedCount + 1,
-          winners: [...(c.winners || []), user.id]
-        };
+    return new Promise((resolve) => {
+      const user = this.auth.currentUser();
+      if (!user) {
+        this.toast.error('Você precisa estar logado para participar dos sorteios.');
+        return resolve({ success: false, message: 'Usuário não conectado.' });
       }
-      return c;
-    }));
 
-    this.auth.addWonCoupon(winCode);
-    this.saveState();
+      const campaign = this._campaigns().find(c => c.id === drawId);
+      if (!campaign) {
+        return resolve({ success: false, message: 'Sorteio não encontrado.' });
+      }
 
-    const successMsg = `🎉 Parabéns, ${user.name.split(' ')[0]}! Você foi sorteado(a) e ganhou o cupom exclusivo: ${winCode}`;
-    this.toast.success(successMsg);
+      // Regra Backend & Frontend: Verificação de Premium/VIP
+      if (campaign.requiresPremium && !user.isPremium && !user.isVip) {
+        const msg = 'Este sorteio de cupons é exclusivo para membros Premium/VIP! Faça seu upgrade VIP por R$ 20,00 para participar.';
+        this.toast.error(msg);
+        return resolve({ success: false, message: msg });
+      }
 
-    return Promise.resolve({
-      success: true,
-      code: winCode,
-      message: successMsg
+      // Regra: Limite de cotas
+      if (campaign.claimedCount >= campaign.totalCoupons) {
+        const msg = 'Os cupons deste sorteio já foram totalmente distribuídos aos ganhadores!';
+        this.toast.error(msg);
+        return resolve({ success: false, message: msg });
+      }
+
+      // Regra: Duplicidade
+      if (campaign.winners?.includes(user.id) || user.wonCoupons?.some(c => c.startsWith(`${campaign.discount}OFF-`))) {
+        const msg = `Você já participou e foi contemplado neste sorteio de ${campaign.discount}%!`;
+        this.toast.info(msg);
+        return resolve({ success: false, message: msg });
+      }
+
+      // Simulação de Sorteio com processamento em tempo real
+      setTimeout(() => {
+        const winCode = `${campaign.discount}OFF-CAPUTE-${Math.floor(1000 + Math.random() * 9000)}`;
+
+        this._campaigns.update(list => list.map(c => {
+          if (c.id === drawId) {
+            return {
+              ...c,
+              claimedCount: c.claimedCount + 1,
+              winners: [...(c.winners || []), user.id]
+            };
+          }
+          return c;
+        }));
+
+        this.auth.addWonCoupon(winCode);
+        this.saveState();
+
+        const successMsg = `🎉 Parabéns, ${user.name.split(' ')[0]}! Você foi sorteado(a) e ganhou o cupom exclusivo: ${winCode}`;
+        this.toast.success(successMsg);
+
+        resolve({
+          success: true,
+          code: winCode,
+          message: successMsg
+        });
+      }, 1400);
     });
   }
 

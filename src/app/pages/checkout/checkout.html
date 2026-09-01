@@ -49,8 +49,20 @@
 
             <div class="form-row three">
               <div class="field">
-                <label>CEP <span class="req">*</span></label>
-                <input class="input" [class.invalid]="field('cep')" formControlName="cep" placeholder="01310-100" />
+                <label>CEP <span class="req">*</span> <small class="cep-auto-tag">(Preenchimento automático)</small></label>
+                <input
+                  class="input"
+                  [class.invalid]="field('cep')"
+                  formControlName="cep"
+                  placeholder="00000-000"
+                  (input)="searchCep()"
+                  (blur)="searchCep()"
+                />
+                @if (loadingCep()) {
+                  <span class="cep-status loading">⏳ Buscando endereço via ViaCEP...</span>
+                } @else if (cepStatusMessage()) {
+                  <span class="cep-status">{{ cepStatusMessage() }}</span>
+                }
               </div>
               <div class="field">
                 <label>Estado <span class="req">*</span></label>

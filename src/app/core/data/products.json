@@ -1,0 +1,735 @@
+[
+  {
+    "id": "iphone-15-pro-max-256gb",
+    "name": "Apple iPhone 15 Pro Max 256GB Titânio Natural",
+    "category": "Celulares",
+    "price": 8499.00,
+    "originalPrice": 9999.00,
+    "images": [
+      "https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "O iPhone 15 Pro Max traz estrutura em titânio aeroespacial, chip A17 Pro com desempenho revolucionário para jogos, Botão de Ação configurável e o sistema de câmera principal mais poderoso em um iPhone com zoom óptico de 5x.",
+    "features": [
+      "Estrutura em Titânio de Grau Aeroespacial leve e resistente",
+      "Chip A17 Pro com GPU de 6 núcleos e Ray Tracing",
+      "Câmera Teleobjetiva de 5x com maior alcance óptico de sempre",
+      "Botão de Ação para atalhos rápidos personalizáveis",
+      "Conector USB-C com suporte a velocidades de USB 3"
+    ],
+    "specs": [
+      { "label": "Armazenamento", "value": "256GB NVMe" },
+      { "label": "Tela", "value": "6.7\" Super Retina XDR OLED ProMotion 120Hz" },
+      { "label": "Processador", "value": "Apple A17 Pro (3nm)" },
+      { "label": "Câmera Traseira", "value": "Tripla 48MP + 12MP Ultra-Wide + 12MP Tele 5x" },
+      { "label": "Resistência", "value": "IP68 (até 6 metros por 30 minutos)" },
+      { "label": "Garantia", "value": "12 Meses CaputeStore" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 184,
+    "reviews": [
+      { "id": "r1", "author": "Rodrigo Nogueira", "rating": 5, "comment": "Câmera surreal de linda e o acabamento em titânio deixa super leve. Chegou em 2 dias pela CaputeStore!", "date": "2026-08-15" }
+    ],
+    "stock": 18,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [
+      { "question": "O produto é original com nota fiscal e garantia?", "answer": "Sim, produto 100% original Apple, lacrado na caixa com NF-e e 12 meses de garantia oficial." }
+    ],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "samsung-galaxy-s24-ultra-512gb",
+    "name": "Samsung Galaxy S24 Ultra 512GB Galaxy AI",
+    "category": "Celulares",
+    "price": 6899.00,
+    "originalPrice": 7999.00,
+    "images": [
+      "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1580910051074-3eb694886505?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Galaxy S24 Ultra impulsionado por Galaxy AI: tradução simultânea de chamadas, pesquisa com Circule para Pesquisar no Google, estrutura de titânio e S Pen integrada.",
+    "features": [
+      "Recursos Inteligentes Galaxy AI (Tradução ao vivo e busca visual)",
+      "Câmera Quádrupla de 200MP com Nightography Avançado",
+      "S Pen Integrada de Alta Precisão"
+    ],
+    "specs": [
+      { "label": "Armazenamento", "value": "512GB UFS 4.0" },
+      { "label": "Memória RAM", "value": "12GB" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 142,
+    "reviews": [
+      { "id": "r1", "author": "Lucas Mendes", "rating": 5, "comment": "A tela antireflexo é surreal de boa no sol e a bateria dura fácil 1 dia e meio.", "date": "2026-07-20" }
+    ],
+    "stock": 22,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [
+      { "question": "Acompanha a caneta S Pen?", "answer": "Sim, a S Pen integrada vem embutida no corpo do aparelho." }
+    ],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "xiaomi-14-ultra-512gb",
+    "name": "Xiaomi 14 Ultra 512GB Leica Quad Camera 16GB RAM",
+    "category": "Celulares",
+    "price": 5999.00,
+    "originalPrice": 6999.00,
+    "images": [
+      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Flagship fotográfico desenvolvido com lentes ópticas Leica de abertura variável de 1 polegada, Snapdragon 8 Gen 3 e carregamento HyperCharge de 90W.",
+    "features": [
+      "Câmera Quádrupla Leica com sensor principal Sony LYT-900 1.0\"",
+      "Tela AMOLED WQHD+ 120Hz com 3000 nits de brilho",
+      "Carregamento ultra-rápido de 90W com fio e 80W sem fio"
+    ],
+    "specs": [
+      { "label": "Processador", "value": "Qualcomm Snapdragon 8 Gen 3" },
+      { "label": "Memória RAM", "value": "16GB LPDDR5X" },
+      { "label": "Armazenamento", "value": "512GB UFS 4.0" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 65,
+    "reviews": [
+      { "id": "r1", "author": "Marcio Silva", "rating": 5, "comment": "As fotos no modo retrato da Leica são simplesmente incomparáveis.", "date": "2026-08-05" }
+    ],
+    "stock": 14,
+    "badge": "novo",
+    "exclusive": false,
+    "faq": [
+      { "question": "Vem com carregador rápido na caixa?", "answer": "Sim, acompanha o carregador original Xiaomi HyperCharge de 90W na caixa." }
+    ],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "motorola-edge-50-ultra-512gb",
+    "name": "Motorola Edge 50 Ultra 512GB Wood Edition 12GB RAM",
+    "category": "Celulares",
+    "price": 4799.00,
+    "originalPrice": 5499.00,
+    "images": [
+      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Design sofisticado com acabamento traseiro em madeira natural real, câmera telefoto periscópica com zoom de 100x com IA e carregamento TurboPower de 125W.",
+    "features": [
+      "Acabamento traseiro exclusivo em madeira natural certificada",
+      "Carregamento TurboPower de 125W (100% em 18 minutos)",
+      "Tela pOLED 144Hz Pantone Validated com som Dolby Atmos"
+    ],
+    "specs": [
+      { "label": "Processador", "value": "Snapdragon 8s Gen 3" },
+      { "label": "Armazenamento", "value": "512GB UFS 4.0" }
+    ],
+    "rating": 4.7,
+    "reviewsCount": 42,
+    "reviews": [
+      { "id": "r1", "author": "Fernanda Lima", "rating": 5, "comment": "A traseira em madeira é linda demais e o carregamento de 125W é inacreditável.", "date": "2026-07-12" }
+    ],
+    "stock": 16,
+    "badge": null,
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "macbook-pro-16-m3-max",
+    "name": "Apple MacBook Pro 16\" M3 Max 36GB SSD 1TB",
+    "category": "Notebooks",
+    "price": 24999.00,
+    "originalPrice": 27999.00,
+    "images": [
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Workstation portátil definitiva para profissionais criativos e desenvolvedores. Equipado com chip M3 Max de 14 núcleos de CPU e GPU de 30 núcleos, tela Liquid Retina XDR de 16.2\" e autonomia incrível de até 22 horas.",
+    "features": [
+      "Chip M3 Max extraordinariamente potente para renderização 3D e IA",
+      "Tela Liquid Retina XDR com 1600 nits de brilho de pico",
+      "36GB de Memória Unificada de altíssima largura de banda"
+    ],
+    "specs": [
+      { "label": "Processador", "value": "Apple M3 Max (CPU 14-core / GPU 30-core)" },
+      { "label": "Memória Unificada", "value": "36GB" },
+      { "label": "Armazenamento", "value": "1TB SSD NVMe Ultrarrápido" }
+    ],
+    "rating": 5.0,
+    "reviewsCount": 68,
+    "reviews": [
+      { "id": "r1", "author": "Guilherme Santos", "rating": 5, "comment": "Renderiza vídeos em 8K sem nem esquentar ou acionar ventoinhas.", "date": "2026-08-10" }
+    ],
+    "stock": 10,
+    "badge": "exclusivo",
+    "exclusive": true,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "notebook-rog-strix-g16-rtx4070",
+    "name": "Notebook Gamer Asus ROG Strix G16 i9 RTX 4070",
+    "category": "Notebooks",
+    "price": 12499.00,
+    "originalPrice": 14299.00,
+    "images": [
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Domine os eSports e jogos AAA de última geração com o ROG Strix G16. Equipado com Intel Core i9 de 13ª Geração, placa de vídeo NVIDIA GeForce RTX 4070 8GB e tela ROG Nebula 240Hz.",
+    "features": [
+      "Processador Intel Core i9-13980HX de 24 Núcleos",
+      "NVIDIA GeForce RTX 4070 com DLSS 3 e MUX Switch",
+      "Tela 16\" QHD+ 240Hz 3ms ROG Nebula Display"
+    ],
+    "specs": [
+      { "label": "Processador", "value": "Intel Core i9-13980HX (24 cores)" },
+      { "label": "Placa de Vídeo", "value": "NVIDIA GeForce RTX 4070 8GB GDDR6" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 92,
+    "reviews": [
+      { "id": "r1", "author": "Enzo Ferrari", "rating": 5, "comment": "Roda qualquer jogo acima de 120 FPS no Ultra.", "date": "2026-07-28" }
+    ],
+    "stock": 15,
+    "badge": "novo",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "notebook-dell-xps-15-intel-i7",
+    "name": "Notebook Dell XPS 15 Intel i7 32GB SSD 1TB Touch",
+    "category": "Notebooks",
+    "price": 9899.00,
+    "originalPrice": 11499.00,
+    "images": [
+      "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Premium ultrabook com tela OLED 3.5K sensível ao toque, corpo esculpido em alumínio usinado CNC e fibra de carbono, ideal para executivos e profissionais exigentes.",
+    "features": [
+      "Tela OLED 3.5K Touch InfinityEdge com 100% DCI-P3",
+      "Corpo premium em Alumínio usinado CNC e apoio de mão em Fibra de Carbono",
+      "Audio quad-speaker afinado pelo produtor musical Jack Joseph Puig"
+    ],
+    "specs": [
+      { "label": "Processador", "value": "Intel Core i7-13700H" },
+      { "label": "Memória RAM", "value": "32GB DDR5" },
+      { "label": "Armazenamento", "value": "1TB SSD NVMe M.2" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 54,
+    "reviews": [
+      { "id": "r1", "author": "Beatriz Ramos", "rating": 5, "comment": "Construção física impecável. A tela OLED touch tem cores surreais.", "date": "2026-06-25" }
+    ],
+    "stock": 12,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "notebook-lenovo-thinkpad-x1-carbon",
+    "name": "Notebook Lenovo ThinkPad X1 Carbon Gen 11 i7 16GB",
+    "category": "Notebooks",
+    "price": 11299.00,
+    "originalPrice": 12999.00,
+    "images": [
+      "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Lendária durabilidade militar em fibra de carbono ultraleve de 1.12kg, teclado TrackPoint clássico e certificação de segurança corporativa vPro.",
+    "features": [
+      "Peso de apenas 1.12 kg em fibra de carbono avançada",
+      "Testado contra 12 requisitos de padrão militar MIL-STD 810H",
+      "Segurança reforçada com leitor biométrico e câmera infravermelha"
+    ],
+    "specs": [
+      { "label": "Processador", "value": "Intel Core i7 vPro 13ª Geração" },
+      { "label": "Peso", "value": "1.12 kg" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 38,
+    "reviews": [
+      { "id": "r1", "author": "Carlos Drummond", "rating": 5, "comment": "O melhor teclado de notebook do planeta. Resistente e lefeitíssimo.", "date": "2026-08-01" }
+    ],
+    "stock": 9,
+    "badge": "exclusivo",
+    "exclusive": true,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "fone-sony-wh1000xm5-wireless-anc",
+    "name": "Headphone Sony WH-1000XM5 ANC Wireless Black",
+    "category": "Fones",
+    "price": 2199.00,
+    "originalPrice": 2599.00,
+    "images": [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Líder de mercado em cancelamento de ruído. Dois processadores e 8 microfones garantem isolamento acústico impecável e áudio Hi-Res sem fio.",
+    "features": [
+      "Cancelamento de Ruído Líder de Mercado com HD Noise Cancelling Processor V1",
+      "Autonomia de até 30 horas com carregamento ultra rápido"
+    ],
+    "specs": [
+      { "label": "Driver", "value": "30mm de Precisão" },
+      { "label": "Autonomia", "value": "Até 30 horas (ANC ligado)" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 210,
+    "reviews": [
+      { "id": "r1", "author": "Felipe Alcantara", "rating": 5, "comment": "O cancelamento de ruído no avião é magico.", "date": "2026-08-11" }
+    ],
+    "stock": 35,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "airpods-pro-2-usbc",
+    "name": "Apple AirPods Pro 2ª Geração MagSafe USB-C",
+    "category": "Fones",
+    "price": 1899.00,
+    "originalPrice": 2299.00,
+    "images": [
+      "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "AirPods Pro com chip H2 para Cancelamento Ativo de Ruído até 2x mais potente e Áudio Espacial Personalizado.",
+    "features": [
+      "Chip Apple H2 com graves mais profundos",
+      "Áudio Adaptativo ajusta o controle de ruído"
+    ],
+    "specs": [
+      { "label": "Chip", "value": "Apple H2 no Fone" },
+      { "label": "Autonomia", "value": "Até 30h com estojo" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 165,
+    "reviews": [],
+    "stock": 40,
+    "badge": "novo",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "headset-steelseries-arctis-nova-pro",
+    "name": "Headset Gamer SteelSeries Arctis Nova Pro Wireless",
+    "category": "Fones",
+    "price": 2499.00,
+    "originalPrice": 2899.00,
+    "images": [
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Áudio omnidirecional de nível audiófilo com o sistema de som Nova Pro Acoustic, estação base OLED com troca de bateria sem parar o jogo.",
+    "features": [
+      "Sistema de bateria dupla Hot-Swap (carregue uma enquanto usa a outra)",
+      "Estação base sem fio OLED com ajuste de equalizador em tempo real",
+      "Cancelamento Ativo de Ruído (ANC) híbrido com 4 microfones"
+    ],
+    "specs": [
+      { "label": "Drivers", "value": "40mm Neodímio Hi-Res" },
+      { "label": "Conexão", "value": "2.4GHz sem fio simultâneo + Bluetooth 5.0" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 77,
+    "reviews": [
+      { "id": "r1", "author": "Igor Siqueira", "rating": 5, "comment": "A base OLED e a troca de bateria quente são genialidades sem igual.", "date": "2026-07-19" }
+    ],
+    "stock": 18,
+    "badge": "exclusivo",
+    "exclusive": true,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "jbl-tour-one-m2-anc",
+    "name": "Fone Bluetooth JBL Tour One M2 ANC Hi-Res",
+    "category": "Fones",
+    "price": 1299.00,
+    "originalPrice": 1599.00,
+    "images": [
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Tecnologia True Adaptive Noise Cancelling da JBL, som espacial imersivo e até 50 horas de autonomia total de bateria.",
+    "features": [
+      "True Adaptive Noise Cancelling ajusta o isolamento ao ambiente automaticamente",
+      "Bateria para até 50 horas de áudio contínuo",
+      "Chamadas cristalinas com tecnologia de 4 microfones direcionais"
+    ],
+    "specs": [
+      { "label": "Drivers", "value": "40mm Dinâmicos" },
+      { "label": "Bateria", "value": "Até 50h (ANC desligado)" }
+    ],
+    "rating": 4.7,
+    "reviewsCount": 63,
+    "reviews": [],
+    "stock": 25,
+    "badge": null,
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "apple-watch-ultra-2-gps-cellular",
+    "name": "Smartwatch Apple Watch Ultra 2 GPS + Cellular 49mm",
+    "category": "Smartwatches",
+    "price": 7999.00,
+    "originalPrice": 9299.00,
+    "images": [
+      "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "O relógio definitivo para aventura e esportes radicais. Caixa de titânio de 49mm e tela Retina de 3000 nits.",
+    "features": [
+      "Caixa de Titânio resistente à corrosão e profundidade de 100m",
+      "Tela de 3000 nits — a mais brilhante já criada pela Apple"
+    ],
+    "specs": [
+      { "label": "Tamanho da Caixa", "value": "49mm Titânio" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 78,
+    "reviews": [],
+    "stock": 12,
+    "badge": "exclusivo",
+    "exclusive": true,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "samsung-galaxy-watch-6-classic-47mm",
+    "name": "Smartwatch Galaxy Watch 6 Classic 47mm LTE",
+    "category": "Smartwatches",
+    "price": 1999.00,
+    "originalPrice": 2499.00,
+    "images": [
+      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Design clássico atemporal com a famosa coroa giratória física e monitoramento de saúde BioActive.",
+    "features": [
+      "Catraca Giratória Física de Alta Precisão",
+      "Sensor BioActive (ECG e Composição Corporal)"
+    ],
+    "specs": [
+      { "label": "Tamanho", "value": "47mm Aço Inoxidável" }
+    ],
+    "rating": 4.7,
+    "reviewsCount": 88,
+    "reviews": [],
+    "stock": 25,
+    "badge": null,
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "garmin-fenix-7x-solar-sapphire",
+    "name": "Smartwatch Garmin Fenix 7X Solar Sapphire GPS Multi-band",
+    "category": "Smartwatches",
+    "price": 5499.00,
+    "originalPrice": 6299.00,
+    "images": [
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Relógio esportivo com carregamento por energia solar Power Sapphire, lanterna de LED integrada, mapas topográficos e métricas avançadas de treino.",
+    "features": [
+      "Lente de carregamento solar Power Sapphire para autonomia de semanas",
+      "Lanterna multi-LED ultra brilhante embutida no corpo do relógio",
+      "Métricas de performance Stamina, VO2 Max e consultor de Jet Lag"
+    ],
+    "specs": [
+      { "label": "Bateria", "value": "Até 37 dias com recarga solar" },
+      { "label": "Resistência", "value": "100 metros (10 ATM)" }
+    ],
+    "rating": 5.0,
+    "reviewsCount": 51,
+    "reviews": [
+      { "id": "r1", "author": "Alexandre Silva", "rating": 5, "comment": "A bateria movida a luz do sol dura mais de um mês sem ir à tomada.", "date": "2026-08-03" }
+    ],
+    "stock": 10,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "console-playstation-5-slim-edicao-digital",
+    "name": "Console PlayStation 5 Slim 1TB Edição Digital + 2 Jogos",
+    "category": "Games",
+    "price": 3699.00,
+    "originalPrice": 4299.00,
+    "images": [
+      "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "SSD de 1TB ultrarrápido, imersão com resposta tátil do controle DualSense e áudio 3D.",
+    "features": [
+      "Design Slim compacto com 1TB de SSD",
+      "Controle DualSense com resposta tátil"
+    ],
+    "specs": [
+      { "label": "SSD", "value": "1TB Customizado" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 230,
+    "reviews": [],
+    "stock": 30,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "console-xbox-series-x-1tb",
+    "name": "Console Xbox Series X 1TB Preto 4K 120 FPS",
+    "category": "Games",
+    "price": 4199.00,
+    "originalPrice": 4799.00,
+    "images": [
+      "https://images.unsplash.com/photo-1486401899868-0e435ed85128?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "O Xbox mais rápido e poderoso de todos os tempos. 12 teraflops de potência de processamento gráfico, suporte a jogos em 4K real e Quick Resume.",
+    "features": [
+      "12 Teraflops de poder de processamento gráfico RDNA 2",
+      "Recurso Quick Resume para alternar instantaneamente entre múltiplos jogos",
+      "Compatibilidade total com 4 gerações de jogos Xbox"
+    ],
+    "specs": [
+      { "label": "Desempenho", "value": "12 Teraflops" },
+      { "label": "Armazenamento", "value": "1TB NVMe Customizado" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 140,
+    "reviews": [
+      { "id": "r1", "author": "Renan Oliveira", "rating": 5, "comment": "Silencioso ao extremo e o Game Pass roda tudo perfeito em 4K.", "date": "2026-07-29" }
+    ],
+    "stock": 20,
+    "badge": "novo",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "console-nintendo-switch-oled-mario",
+    "name": "Console Nintendo Switch OLED 64GB Edição Mario",
+    "category": "Games",
+    "price": 2199.00,
+    "originalPrice": 2599.00,
+    "images": [
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Tela OLED vibrante de 7 polegadas com suporte ajustável amplo, dock com porta de rede LAN com fio e 64GB de armazenamento interno.",
+    "features": [
+      "Tela OLED de 7 polegadas com cores vivas e alto contraste",
+      "Edição especial temática vermelha com detalhes icônicos do Mario",
+      "Modo portátil, semiportátil e TV"
+    ],
+    "specs": [
+      { "label": "Tela", "value": "7.0\" OLED Multi-touch" },
+      { "label": "Armazenamento", "value": "64GB interno" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 110,
+    "reviews": [],
+    "stock": 25,
+    "badge": null,
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "monitor-lg-ultragear-34-curved-oled-175hz",
+    "name": "Monitor Gamer LG UltraGear 34\" Ultrawide Curved OLED 175Hz",
+    "category": "Monitores",
+    "price": 6499.00,
+    "originalPrice": 7599.00,
+    "images": [
+      "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Painel OLED curvo WQHD de 34 polegadas com proporção 21:9 e 0.03ms.",
+    "features": [
+      "Painel OLED de 34\" WQHD Curvo (3440 x 1440) 800R",
+      "Tempo de Resposta Instantâneo de 0.03ms (GtG)"
+    ],
+    "specs": [
+      { "label": "Tamanho", "value": "34 polegadas Curvo 21:9" }
+    ],
+    "rating": 5.0,
+    "reviewsCount": 49,
+    "reviews": [],
+    "stock": 8,
+    "badge": "exclusivo",
+    "exclusive": true,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "monitor-samsung-odyssey-g7-27-240hz",
+    "name": "Monitor Gamer Samsung Odyssey G7 27\" Curvo 240Hz 1ms",
+    "category": "Monitores",
+    "price": 2899.00,
+    "originalPrice": 3499.00,
+    "images": [
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Curvatura de 1000R revolucionária que envolve seu campo de visão, taxa de 240Hz, resolução WQHD e iluminação CoreSync.",
+    "features": [
+      "Curvatura 1000R extrema para imersão total nos jogos",
+      "Taxa de atualização de 240Hz e tempo de resposta de 1ms GtG",
+      "Suporte a NVIDIA G-Sync e AMD FreeSync Premium Pro"
+    ],
+    "specs": [
+      { "label": "Resolução", "value": "WQHD (2560 x 1440)" },
+      { "label": "Taxa de Atualização", "value": "240Hz" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 85,
+    "reviews": [],
+    "stock": 15,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "monitor-asus-rog-swift-27-4k",
+    "name": "Monitor Gamer Asus ROG Swift 27\" 4K UHD 144Hz IPS",
+    "category": "Monitores",
+    "price": 4999.00,
+    "originalPrice": 5799.00,
+    "images": [
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Resolução 4K de definição extrema com tecnologia DSC (Display Stream Compression), painel IPS rápido de 144Hz e DisplayHDR 600.",
+    "features": [
+      "Resolução 4K UHD (3840 x 2160) com 144Hz via cabo único com DSC",
+      "Gama de cores DCI-P3 de 95% e calibração de cor de fábrica Delta E < 2",
+      "Iluminação Aura Sync RGB na parte traseira"
+    ],
+    "specs": [
+      { "label": "Resolução", "value": "4K UHD 3840 x 2160" },
+      { "label": "Painel", "value": "Fast IPS 1ms" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 44,
+    "reviews": [],
+    "stock": 11,
+    "badge": "novo",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "mouse-logitech-g-pro-x-superlight-2",
+    "name": "Mouse Gamer Logitech G Pro X Superlight 2 Wireless",
+    "category": "Acessórios",
+    "price": 799.00,
+    "originalPrice": 999.00,
+    "images": [
+      "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Switches híbridos óptico-mecânicos Lightforce, sensor HERO 2 e 60 gramas de peso.",
+    "features": [
+      "Switches Híbridos Lightforce sem atraso de debouncing",
+      "Sensor HERO 2 com precisão sub-mícron (32.000 DPI)"
+    ],
+    "specs": [
+      { "label": "Peso", "value": "60g" }
+    ],
+    "rating": 4.9,
+    "reviewsCount": 115,
+    "reviews": [],
+    "stock": 28,
+    "badge": "novo",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "teclado-mecanico-keychron-k2-pro",
+    "name": "Teclado Mecânico Keychron K2 Pro Wireless RGB Hot-Swap",
+    "category": "Acessórios",
+    "price": 699.00,
+    "originalPrice": 849.00,
+    "images": [
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Teclado mecânico compacto 75% personalizado. Programável via QMK/VIA.",
+    "features": [
+      "Layout Compacto 75% (84 teclas)",
+      "Hot-Swappable e Keycaps PBT Double-Shot"
+    ],
+    "specs": [
+      { "label": "Layout", "value": "75%" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 94,
+    "reviews": [],
+    "stock": 20,
+    "badge": "exclusivo",
+    "exclusive": true,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  },
+  {
+    "id": "webcam-logitech-brio-4k-pro",
+    "name": "Webcam Logitech Brio 4K Ultra HD HDR RightLight 3",
+    "category": "Acessórios",
+    "price": 899.00,
+    "originalPrice": 1099.00,
+    "images": [
+      "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?q=80&w=800&auto=format&fit=crop"
+    ],
+    "description": "Webcam premium com transmissão em 4K Ultra HD, suporte a HDR, sensor de reconhecimento facial infravermelho Windows Hello e zoom digital de 5x.",
+    "features": [
+      "Resolução 4K Ultra HD a 30 fps ou 1080p a 60 fps",
+      "Tecnologia RightLight 3 com HDR para ajustar o brilho em ambientes escuros",
+      "Reconhecimento facial com Windows Hello para login sem senha"
+    ],
+    "specs": [
+      { "label": "Resolução", "value": "4K Ultra HD / 1080p 60fps" },
+      { "label": "Conexão", "value": "USB 3.0 tipo C" }
+    ],
+    "rating": 4.8,
+    "reviewsCount": 62,
+    "reviews": [
+      { "id": "r1", "author": "Juliana Paes", "rating": 5, "comment": "Imagem de cinema para reuniões e transmissões ao vivo.", "date": "2026-07-10" }
+    ],
+    "stock": 19,
+    "badge": "mais-vendido",
+    "exclusive": false,
+    "faq": [],
+    "soldBy": "CaputeStore",
+    "freeShipping": true
+  }
+]

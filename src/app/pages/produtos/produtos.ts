@@ -19,7 +19,7 @@ export class Produtos {
   term = signal('');
   selectedCategory = signal<string | null>(null);
   onlyExclusive = signal(false);
-  maxPrice = signal<number>(6000);
+  maxPrice = signal<number>(30000);
   sort = signal('relevancia');
   filtersOpen = signal(false);
 
@@ -65,7 +65,7 @@ export class Produtos {
     this.term.set('');
     this.selectedCategory.set(null);
     this.onlyExclusive.set(false);
-    this.maxPrice.set(6000);
+    this.maxPrice.set(30000);
     this.sort.set('relevancia');
     this.router.navigate([], { queryParams: {} });
   }

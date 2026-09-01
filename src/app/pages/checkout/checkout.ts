@@ -36,6 +36,8 @@ export class Checkout {
   couponMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
   finishedOrder = signal<Order | null>(null);
   submitting = signal(false);
+  loadingCep = signal(false);
+  cepStatusMessage = signal<string | null>(null);
 
   addressForm = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -47,6 +49,44 @@ export class Checkout {
     number: ['', Validators.required],
     complement: [''],
   });
+
+  async searchCep(): Promise<void> {
+    const raw = this.addressForm.get('cep')?.value || '';
+    const cleanCep = raw.replace(/\D/g, '');
+
+    if (cleanCep.length !== 8) {
+      if (raw.length > 0 && cleanCep.length < 8) {
+        this.cepStatusMessage.set('Digite os 8 números do CEP.');
+      }
+      return;
+    }
+
+    this.loadingCep.set(true);
+    this.cepStatusMessage.set('🔍 Buscando endereço pelo CEP...');
+
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      const data = await res.json();
+
+      if (data.erro) {
+        this.cepStatusMessage.set('❌ CEP não encontrado no Brasil.');
+        this.toastService.error('CEP não encontrado. Por favor, verifique o código.');
+      } else {
+        this.addressForm.patchValue({
+          street: data.logradouro || '',
+          city: data.localidade || '',
+          state: data.uf || '',
+          complement: data.bairro ? `Bairro ${data.bairro}` : ''
+        });
+        this.cepStatusMessage.set(`✅ ${data.logradouro}, ${data.localidade} - ${data.uf}`);
+        this.toastService.success(`Endereço preenchido automaticamente! (${data.localidade}/${data.uf})`);
+      }
+    } catch {
+      this.cepStatusMessage.set('⚠️ Erro ao consultar o CEP. Preencha os dados manualmente.');
+    } finally {
+      this.loadingCep.set(false);
+    }
+  }
 
   cardForm = this.fb.nonNullable.group({
     cardNumber: [''],

@@ -32,24 +32,43 @@
   p { font-size: .85rem; max-width: 280px; }
 }
 
+.socials-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 14px;
+}
+
 .socials {
   display: flex;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 8px;
+  flex-wrap: wrap;
 
-  a {
-    width: 34px;
-    height: 34px;
+  .social-btn {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: var(--surface-2);
     border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: .85rem;
-    transition: background .2s ease, color .2s ease;
+    color: var(--text-muted);
+    transition: all 0.25s ease;
 
-    &:hover { background: var(--primary); color: var(--on-primary); }
+    &:hover {
+      transform: translateY(-3px) scale(1.1);
+      color: #fff;
+    }
+
+    &.instagram:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); }
+    &.whatsapp:hover { background: #25D366; }
+    &.tiktok:hover { background: #000; color: #69C9D0; text-shadow: -1px -1px 0 #EE1D52; }
+    &.youtube:hover { background: #FF0000; }
+    &.facebook:hover { background: #1877F2; }
+    &.twitter:hover { background: #1DA1F2; }
+    &.telegram:hover { background: #0088cc; }
   }
 }
 

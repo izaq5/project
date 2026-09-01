@@ -32,9 +32,9 @@
         <h3>Preço máximo</h3>
         <input
           type="range"
-          min="50"
-          max="6000"
-          step="50"
+          min="100"
+          max="30000"
+          step="100"
           [value]="maxPrice()"
           (input)="setMaxPrice($any($event.target).value)"
         />
@@ -44,7 +44,7 @@
       <div class="filters-block">
         <label class="checkbox-row">
           <input type="checkbox" [checked]="onlyExclusive()" (change)="toggleExclusive()" />
-          <span>Somente produtos <strong class="text-primary">Exclusivos</strong> Nexus VIP</span>
+          <span>Somente produtos <strong class="text-primary">Exclusivos</strong> CaputeStore</span>
         </label>
       </div>
 

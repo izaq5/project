@@ -1,10 +1,104 @@
 <div class="container page cupons-page">
   <div class="page-header text-center">
-    <h1>🏷️ Central de Cupons &amp; Sorteios Exclusivos</h1>
-    <p>Ganhe descontos especiais em sorteios ao vivo, benefícios de 1ª compra e privilégios Premium/VIP.</p>
+    <h1>🏷️ Central de Cupons &amp; Sorteios do Brasil Inteiro 🇧🇷</h1>
+    <p>Participe dos sorteios de cupons válidos para todo o território nacional. Ganhe descontos de até 30% OFF com entrega em qualquer estado!</p>
+    
+    <!-- CRONÔMETRO AO VIVO DA APURAÇÃO -->
+    <div class="live-timer-badge card">
+      <span class="timer-icon">⏱️</span>
+      <span class="timer-label">PRÓXIMA APURAÇÃO NACIONAL EM:</span>
+      <div class="timer-clock">
+        <span class="t-box">{{ countdownHours().toString().padStart(2, '0') }}h</span> :
+        <span class="t-box">{{ countdownMinutes().toString().padStart(2, '0') }}m</span> :
+        <span class="t-box">{{ countdownSeconds().toString().padStart(2, '0') }}s</span>
+      </div>
+    </div>
   </div>
 
-  <!-- 1. CUPOM DE PRIMEIRA COMPRA -->
+  <!-- NATIONWIDE BANNER & STATE SELECTOR -->
+  <section class="coupon-section card brazil-banner-card">
+    <div class="brazil-header">
+      <div class="brazil-badge">🇧🇷 COBERTURA NACIONAL AO VIVO</div>
+      <h2>Sorteios de Cupons em Todos os Estados do Brasil</h2>
+      <p>Independentemente de onde você mora no Brasil, você pode participar dos sorteios diários e resgatar seus cupons de 15%, 25% e 30% OFF!</p>
+    </div>
+
+    <div class="state-filter-box">
+      <label for="state-select">📍 Selecione o seu estado (UF) para sincronizar sorteios regionais:</label>
+      <select id="state-select" class="input state-select" [value]="selectedState()" (change)="onStateChange($any($event.target).value)">
+        @for (st of brazilianStates; track st.code) {
+          <option [value]="st.code">{{ st.name }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- FEED DE GANHADORES COM ANIMAÇÃO DE CARREGAMENTO -->
+    <div class="live-winners-section">
+      <div class="winners-header">
+        <h3>🔥 ÚLTIMOS CLIENTES CONTEMPLADOS PELO BRASIL</h3>
+        @if (loadingState()) {
+          <span class="feed-spinner">🔄 Atualizando servidores regionais...</span>
+        }
+      </div>
+
+      @if (loadingState()) {
+        <div class="winners-loading-skeleton">
+          <div class="skeleton-chip"></div>
+          <div class="skeleton-chip"></div>
+          <div class="skeleton-chip"></div>
+        </div>
+      } @else {
+        <div class="winners-grid">
+          @for (w of recentBrazilWinners(); track w.code + w.name) {
+            <div class="winner-chip">
+              <span class="w-avatar">👤</span>
+              <div class="w-info">
+                <strong>{{ w.name }} <small>({{ w.cityState }})</small></strong>
+                <span class="w-badge">{{ w.discount }} — <code>{{ w.code }}</code></span>
+              </div>
+              <span class="w-time">{{ w.timeAgo }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- SEÇÃO INTERATIVA: ROLETA DA SORTE CAPUTESTORE -->
+  <section class="coupon-section card roulette-card">
+    <div class="roulette-content">
+      <div class="roulette-info">
+        <span class="badge badge-primary">🎰 TESTE SUA SORTE</span>
+        <h2>Roleta da Sorte Instantânea CaputeStore</h2>
+        <p>Gire a roleta interativa para tentar conquistar um cupom exclusivo surpresa de até 30% OFF imediatamente!</p>
+      </div>
+
+      <div class="roulette-action">
+        <button type="button" class="btn btn-primary btn-lg spin-btn" [disabled]="spinningWheel()" (click)="spinRoulette()">
+          @if (spinningWheel()) {
+            <span class="spin-loader">🎰 Girando Roleta...</span>
+          } @else {
+            🎰 GIRAR ROLETA AGORA
+          }
+        </button>
+
+        @if (rouletteResult()) {
+          <div class="roulette-winner-box">
+            <span class="r-congrats">🎉 VOCÊ GANHOU!</span>
+            <div class="r-code-box">
+              <span class="r-discount">{{ rouletteResult()?.discount }}</span>
+              <code>{{ rouletteResult()?.code }}</code>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" (click)="applyAndGoToCart(rouletteResult()!.code)">
+              🛒 Usar no Carrinho
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. CUPOM DE PRIMEIRA COMPRA (10% OFF) -->
   <section class="coupon-section card">
     <div class="section-title">
       <h2><span class="badge badge-primary">NOVO CLIENTE</span> Cupom de Primeira Compra (10% OFF)</h2>
@@ -12,7 +106,7 @@
     <div class="first-purchase-box">
       <div class="coupon-tag">10% OFF</div>
       <div class="coupon-details">
-        <strong>PRIMEIRA10</strong>
+        <strong>PRIMEIRA10 / BEMVINDO10</strong>
         <p>Válido exclusivamente para a sua 1ª compra na CaputeStore. O sistema verifica automaticamente o seu histórico para evitar reutilização.</p>
         @if (isFirstPurchaseAvailable) {
           <span class="status-available">✅ Elegível para a sua próxima compra!</span>
@@ -20,16 +114,21 @@
           <span class="status-used">⚠️ Você já realizou sua primeira compra anteriormente.</span>
         }
       </div>
-      <button type="button" class="btn btn-primary" (click)="copyCode('PRIMEIRA10')">
-        {{ copied() === 'PRIMEIRA10' ? 'Copiado ✓' : 'Copiar Código' }}
-      </button>
+      <div class="first-actions">
+        <button type="button" class="btn btn-primary" (click)="copyCode('PRIMEIRA10')">
+          {{ copied() === 'PRIMEIRA10' ? 'Copiado ✓' : 'Copiar Código' }}
+        </button>
+        <button type="button" class="btn btn-outline" (click)="applyAndGoToCart('PRIMEIRA10')">
+          🛒 Usar no Carrinho
+        </button>
+      </div>
     </div>
   </section>
 
   <!-- 2. SORTEIO DE CUPONS NORMAIS (15% OFF - 25 CUPONS) -->
   <section class="coupon-section">
     <div class="section-title">
-      <h2>🎁 Sorteio de Cupons de 15% OFF (25 Contemplados)</h2>
+      <h2>🎁 Sorteio Nacional de Cupons de 15% OFF (25 Contemplados)</h2>
     </div>
 
     @for (c of drawService.campaigns(); track c.id) {
@@ -39,9 +138,9 @@
             <span class="raffle-percent">15% OFF</span>
             <div class="raffle-info">
               <h3>{{ c.title }}</h3>
-              <p>Distribuído entre os clientes cadastrados participantes. Cada ganhador recebe seu próprio código individual.</p>
+              <p>Distribuído entre os clientes cadastrados participantes de todo o Brasil. Cada ganhador recebe seu próprio código individual.</p>
               <div class="quota-progress">
-                <span>Cotas distribuídas: <strong>{{ c.claimedCount }} / {{ c.totalCoupons }}</strong></span>
+                <span>Cotas distribuídas nacionalmente: <strong>{{ c.claimedCount }} / {{ c.totalCoupons }}</strong></span>
               </div>
             </div>
           </div>
@@ -49,7 +148,11 @@
           <div class="raffle-actions">
             @if (authService.isLoggedIn()) {
               <button type="button" class="btn btn-primary" [disabled]="participating() === c.id" (click)="participate(c.id)">
-                @if (participating() === c.id) { Sorteando... } @else { 🎲 PARTICIPAR DO SORTEIO DE 15% }
+                @if (participating() === c.id) {
+                  <span class="spin-loader">🎲 Processando Sorteio...</span>
+                } @else {
+                  🎲 PARTICIPAR DO SORTEIO BRASIL 15%
+                }
               </button>
             } @else {
               <a routerLink="/login" class="btn btn-outline">Faça Login para Participar</a>
@@ -63,7 +166,7 @@
   <!-- 3. SORTEIOS PREMIUM & VIP (25% & 30% OFF) -->
   <section class="coupon-section">
     <div class="section-title">
-      <h2><span class="badge badge-vip">👑 PREMIUM &amp; VIP</span> Sorteios Exclusivos (25% e 30% OFF)</h2>
+      <h2><span class="badge badge-vip">👑 PREMIUM &amp; VIP</span> Sorteios Exclusivos Brasil (25% e 30% OFF)</h2>
     </div>
 
     @if (!authService.isPremium()) {
@@ -83,7 +186,7 @@
               <span class="raffle-percent vip-percent">{{ c.discount }}% OFF</span>
               <div class="raffle-info">
                 <h3>{{ c.title }}</h3>
-                <p>Cota total de <strong>{{ c.totalCoupons }} cupons</strong> exclusivos para clientes Premium/VIP.</p>
+                <p>Cota total de <strong>{{ c.totalCoupons }} cupons</strong> exclusivos para clientes Premium/VIP do Brasil.</p>
                 <div class="quota-progress">
                   <span>Disponíveis: <strong>{{ c.totalCoupons - c.claimedCount }} cupons restantes</strong></span>
                 </div>
@@ -93,7 +196,11 @@
             <div class="raffle-actions">
               @if (authService.isPremium()) {
                 <button type="button" class="btn btn-vip" [disabled]="participating() === c.id" (click)="participate(c.id)">
-                  @if (participating() === c.id) { Verificando... } @else { 👑 RESGATAR CUPOM {{ c.discount }}% }
+                  @if (participating() === c.id) {
+                    <span class="spin-loader">👑 Validando Cota VIP...</span>
+                  } @else {
+                    👑 RESGATAR CUPOM {{ c.discount }}%
+                  }
                 </button>
               } @else {
                 <a routerLink="/vip" class="btn btn-outline">🔒 Desbloquear com Plano VIP (R$ 20)</a>
@@ -115,9 +222,14 @@
         @for (code of userWonCoupons; track code) {
           <div class="won-item">
             <code>{{ code }}</code>
-            <button type="button" class="btn btn-primary btn-sm" (click)="copyCode(code)">
-              {{ copied() === code ? 'Copiado ✓' : 'Copiar Cupom' }}
-            </button>
+            <div class="won-item-actions">
+              <button type="button" class="btn btn-primary btn-sm" (click)="copyCode(code)">
+                {{ copied() === code ? 'Copiado ✓' : 'Copiar' }}
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" (click)="applyAndGoToCart(code)">
+                🛒 Usar no Carrinho
+              </button>
+            </div>
           </div>
         }
       </div>

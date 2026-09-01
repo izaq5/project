@@ -19,39 +19,48 @@ export class VipService {
 
   private readonly _partnerships = signal<VipPartnership[]>([
     {
-      id: 'p_cine',
-      category: 'Entretenimento & Filmes',
-      partnerName: 'CineMax VIP Pass',
-      benefit: '1 Mês Grátis de Ingressos + 30% OFF em Combos de Pipoca',
+      id: 'p_netflix',
+      category: 'Filmes & Séries',
+      partnerName: 'Netflix VIP Cine Pass',
+      benefit: '1 Mês Grátis no Plano Premium 4K + 25% OFF em Lançamentos de Filmes',
       icon: '🎬',
-      claimCode: 'CAPUTE-CINEMAX-VIP',
+      claimCode: 'CAPUTE-NETFLIX-VIP',
       isBeta: true
     },
     {
-      id: 'p_stream',
-      category: 'Streaming & Música',
-      partnerName: 'SoundPrime Ultra',
-      benefit: '2 Meses de Áudio Hi-Fi Sem Anúncios',
+      id: 'p_spotify',
+      category: 'Streaming de Música',
+      partnerName: 'Spotify Ultra Premium',
+      benefit: '3 Meses Grátis de Áudio Hi-Fi Sem Anúncios + Downloads Ilimitados',
       icon: '🎧',
-      claimCode: 'CAPUTE-SOUND-VIP',
+      claimCode: 'CAPUTE-SPOTIFY-VIP',
       isBeta: true
     },
     {
-      id: 'p_games',
-      category: 'Games & E-Sports',
-      partnerName: 'GameVault Pass',
-      benefit: 'Acesso VIP a Servidores Dedicados + 20% OFF em Jogos Digitais',
-      icon: '🎮',
-      claimCode: 'CAPUTE-GAMEPASS-2025',
+      id: 'p_disney_max',
+      category: 'Filmes & Streaming',
+      partnerName: 'Disney+ & Max Cine Combo',
+      benefit: '30% OFF na Assinatura Anual de Estreias de Cinema e Séries',
+      icon: '🍿',
+      claimCode: 'CAPUTE-CINEMAX-30',
       isBeta: true
     },
     {
-      id: 'p_edu',
-      category: 'Cursos & Tecnologia',
-      partnerName: 'TechAcademy Pro',
-      benefit: '40% OFF em Certificações Digitais e Bootcamps',
-      icon: '🚀',
-      claimCode: 'CAPUTE-ACADEMY-VIP',
+      id: 'p_deezer_apple',
+      category: 'Streaming de Música',
+      partnerName: 'Deezer & Apple Music Pass',
+      benefit: '2 Meses Grátis + Playlist Exclusiva CaputeStore de Alta Fidelidade',
+      icon: '🎵',
+      claimCode: 'CAPUTE-MUSIC-PASS',
+      isBeta: true
+    },
+    {
+      id: 'p_prime',
+      category: 'Filmes & Aluguel',
+      partnerName: 'Prime Video Cine Pass',
+      benefit: '5 Ingressos Virtuais + Cashback Exclusivo em Aluguel de Filmes',
+      icon: '🎥',
+      claimCode: 'CAPUTE-PRIME-CINE',
       isBeta: true
     }
   ]);

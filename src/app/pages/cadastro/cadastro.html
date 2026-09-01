@@ -2,8 +2,16 @@
   <div class="auth-card card">
     <div class="auth-header">
       <span class="logo-bolt">⚡</span>
-      <h1><span class="text-primary">NEXUS</span> STORE</h1>
-      <p>Crie sua conta e desbloqueie cupons e produtos exclusivos Nexus VIP.</p>
+      <h1><span class="text-primary">CAPUTE</span> STORE</h1>
+      <p>Crie sua conta agora e ganhe <strong>10% OFF</strong> na sua 1ª compra!</p>
+    </div>
+
+    <div class="welcome-coupon-banner">
+      <span class="banner-icon">🎁</span>
+      <div class="banner-text">
+        <strong>Cupom de Boas-Vindas Liberado!</strong>
+        <p>Ao se cadastrar, seu código <code>BEMVINDO10</code> (10% OFF) será ativado automaticamente.</p>
+      </div>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
@@ -43,11 +51,6 @@
         </div>
       </div>
 
-      <label class="checkbox-row vip-row">
-        <input type="checkbox" formControlName="exclusiveMember" (click)="onVipCheckboxClick($event)" />
-        <span>Quero fazer parte do <strong class="text-primary">Nexus VIP</strong> e ter acesso a cupons e produtos exclusivos.</span>
-      </label>
-
       <label class="checkbox-row">
         <input type="checkbox" formControlName="terms" />
         <span>Li e aceito os Termos de Uso e a Política de Privacidade.</span>
@@ -55,14 +58,10 @@
       @if (field('terms')) { <span class="error-msg">Você precisa aceitar os termos.</span> }
 
       <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
-        {{ submitting() ? 'Criando conta...' : 'Criar Conta' }}
+        {{ submitting() ? 'Criando conta...' : 'Criar Conta e Garantir 10% OFF' }}
       </button>
     </form>
 
     <p class="auth-switch">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
   </div>
 </div>
-
-@if (showVipOffer()) {
-  <app-vip-offer-modal (confirm)="confirmVipOffer()" (cancel)="declineVipOffer()" />
-}
