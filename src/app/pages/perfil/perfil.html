@@ -16,7 +16,7 @@
         <span>{{ user.email }}</span>
         @if (user.phone) { <span>{{ user.phone }}</span> }
         @if (user.exclusiveMember) {
-          <span class="badge badge-exclusive">Membro Nexus VIP</span>
+          <span class="badge badge-exclusive">Membro CaputeStore VIP</span>
         } @else {
           <span class="badge badge-outline">Cliente Padrão</span>
         }
@@ -30,7 +30,7 @@
         <div><strong>{{ orderService.orders().length }}</strong><small>Meus Pedidos</small></div>
       </a>
       <a routerLink="/favoritos" class="perfil-card">
-        <span>♥</span>
+        <span>⭐</span>
         <div><strong>{{ favoritesService.count() }}</strong><small>Favoritos</small></div>
       </a>
       <a routerLink="/vender" class="perfil-card">
@@ -46,16 +46,16 @@
     <div class="vip-toggle card">
       @if (user.exclusiveMember) {
         <div>
-          <strong>Você é membro Nexus VIP 🎉</strong>
-          <p>Aproveite cupons e produtos exclusivos em toda a loja.</p>
+          <strong>Você é membro CaputeStore VIP 🎉</strong>
+          <p>Aproveite cupons de nicho e produtos exclusivos em toda a loja.</p>
         </div>
-        <button type="button" class="btn btn-outline" (click)="requestVip()">Sair do Nexus VIP</button>
+        <button type="button" class="btn btn-outline" (click)="requestVip()">Sair do Clube VIP</button>
       } @else {
         <div>
-          <strong>Torne-se Nexus VIP</strong>
-          <p>Desbloqueie cupons e produtos exclusivos gratuitamente.</p>
+          <strong>Torne-se Membro VIP</strong>
+          <p>Desbloqueie cupons de nicho por categoria e produtos exclusivos.</p>
         </div>
-        <button type="button" class="btn btn-exclusive" (click)="requestVip()">Quero ser VIP</button>
+        <a routerLink="/vip" class="btn btn-exclusive">Conhecer Plano VIP (R$ 20)</a>
       }
     </div>
   } @else {

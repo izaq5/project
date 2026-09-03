@@ -6,6 +6,7 @@ export interface Coupon {
   discountPercent: number;
   description: string;
   minValue?: number;
+  category?: string;
   isFirstPurchaseOnly?: boolean;
   isPremiumOnly?: boolean;
   assignedUserId?: string;

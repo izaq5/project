@@ -13,8 +13,8 @@
       }
     </div>
 
-    <button type="button" class="fav-btn" [class.active]="isFavorite" (click)="toggleFavorite($event)" aria-label="Favoritar">
-      {{ isFavorite ? '❤️' : '🤍' }}
+    <button type="button" class="fav-btn" [class.active]="isFavorite()" (click)="toggleFavorite($event)" aria-label="Favoritar" [title]="isFavorite() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
+      {{ isFavorite() ? '⭐' : '☆' }}
     </button>
   </div>
 

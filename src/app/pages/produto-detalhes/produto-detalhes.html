@@ -20,8 +20,8 @@
           @if (discountPercent() > 0) {
             <span class="badge badge-primary discount-badge">-{{ discountPercent() }}%</span>
           }
-          <button type="button" class="fav-toggle" [class.active]="isFavorite()" (click)="toggleFavorite()" aria-label="Favoritar">
-            {{ isFavorite() ? '♥' : '♡' }}
+          <button type="button" class="fav-toggle" [class.active]="isFavorite()" (click)="toggleFavorite()" aria-label="Favoritar" [title]="isFavorite() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
+            {{ isFavorite() ? '⭐' : '☆' }}
           </button>
           <img [src]="product.images[activeImage()]" [alt]="product.name" />
         </div>
@@ -29,7 +29,7 @@
 
       <div class="pd-info">
         @if (product.badge === 'exclusivo') {
-          <span class="badge badge-exclusive">Exclusivo Nexus VIP</span>
+          <span class="badge badge-exclusive">Exclusivo CaputeStore VIP</span>
         } @else if (product.badge === 'mais-vendido') {
           <span class="badge badge-primary">Mais Vendido</span>
         } @else if (product.badge === 'novo') {
@@ -72,7 +72,7 @@
           🛒 Adicionar ao Carrinho
         </button>
         <button type="button" class="btn btn-outline btn-block btn-lg fav-btn-lg" [class.active]="isFavorite()" (click)="toggleFavorite()">
-          {{ isFavorite() ? '♥ Nos Favoritos' : '♡ Adicionar aos Favoritos' }}
+          {{ isFavorite() ? '★ Nos Favoritos' : '☆ Adicionar aos Favoritos' }}
         </button>
 
         <div class="trust-badges">

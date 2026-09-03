@@ -1,5 +1,4 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { DrawCampaign } from '../models/coupon.model';
 import { AuthService } from './auth.service';
 import { ToastService } from './toast.service';
@@ -10,7 +9,6 @@ const STORAGE_DRAWS_KEY = 'capute_draws_state';
 export class DrawService {
   private auth = inject(AuthService);
   private toast = inject(ToastService);
-  private http = inject(HttpClient);
 
   private readonly _campaigns = signal<DrawCampaign[]>([
     {

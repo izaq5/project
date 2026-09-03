@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DrawService } from '../../core/services/draw.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { CouponService } from '../../core/services/coupon.service';
+import { Coupon } from '../../core/models/coupon.model';
 
 export interface WinnerFeedItem {
   name: string;
@@ -30,10 +31,43 @@ export class Cupons implements OnInit, OnDestroy {
   participating = signal<string | null>(null);
   selectedState = signal<string>('Todos');
   selectedCategory = signal<string>('todos');
+  selectedNicheCategory = signal<string>('Todas');
   searchQuery = signal<string>('');
   loadingState = signal<boolean>(false);
   spinningWheel = signal<boolean>(false);
   rouletteResult = signal<{ discount: string; code: string } | null>(null);
+
+  readonly nicheCategories = [
+    { id: 'Todas', name: '✨ Todas as Categorias' },
+    { id: 'Celulares', name: '📱 Celulares' },
+    { id: 'Notebooks', name: '💻 Notebooks' },
+    { id: 'Fones', name: '🎧 Fones' },
+    { id: 'Games', name: '🎮 Games' },
+    { id: 'Monitores', name: '🖥️ Monitores' },
+    { id: 'Smartwatches', name: '⌚ Smartwatches' },
+    { id: 'Acessórios', name: '🔌 Acessórios' },
+    { id: 'Geral', name: '👑 Cupons Globais VIP' }
+  ];
+
+  vipCoupons = computed(() => {
+    if (!this.authService.isVip()) return [];
+    const cat = this.selectedNicheCategory();
+    const query = this.searchQuery().trim().toLowerCase();
+    let list = this.couponService.getVipCoupons(cat);
+
+    if (query) {
+      list = list.filter(c =>
+        c.code.toLowerCase().includes(query) ||
+        c.description.toLowerCase().includes(query) ||
+        (c.category && c.category.toLowerCase().includes(query))
+      );
+    }
+    return list;
+  });
+
+  setNicheCategory(category: string): void {
+    this.selectedNicheCategory.set(category);
+  }
 
   // Relógio Regressivo em Tempo Real
   countdownHours = signal(3);

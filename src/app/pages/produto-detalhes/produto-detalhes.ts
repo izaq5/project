@@ -83,8 +83,8 @@ export class ProdutoDetalhes {
   }
 
   toggleFavorite(): void {
-    this.favoritesService.toggle(this.productId());
-    this.toastService.info(this.isFavorite() ? 'Adicionado aos favoritos.' : 'Removido dos favoritos.');
+    const isNowFav = this.favoritesService.toggle(this.productId());
+    this.toastService.info(isNowFav ? '⭐ Adicionado aos favoritos!' : 'Removido dos favoritos.');
   }
 
   setTab(tab: Tab): void {

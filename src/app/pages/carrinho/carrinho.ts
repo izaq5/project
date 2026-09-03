@@ -38,7 +38,7 @@ export class Carrinho implements OnInit {
   discountAmount = computed(() => {
     const coupon = this.appliedCoupon();
     if (!coupon) return 0;
-    return (this.cartService.subtotal() * coupon.discountPercent) / 100;
+    return this.couponService.calculateDiscount(coupon, this.cartService.subtotal(), this.cartService.items());
   });
 
   get total(): number {
@@ -56,7 +56,7 @@ export class Carrinho implements OnInit {
       return;
     }
 
-    const result = this.couponService.validate(code, this.cartService.subtotal());
+    const result = this.couponService.validate(code, this.cartService.subtotal(), this.cartService.items());
     if (result.valid && result.coupon) {
       this.appliedCoupon.set(result.coupon);
       this.couponMessage.set({ type: 'success', text: result.message });

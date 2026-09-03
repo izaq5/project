@@ -67,8 +67,8 @@
           }
         </div>
 
-        <a routerLink="/favoritos" class="action-item">
-          <span class="action-icon">♡</span>
+        <a routerLink="/favoritos" class="action-item" title="Favoritos">
+          <span class="action-icon">☆</span>
           @if (favoritesService.count() > 0) {
             <span class="fav-badge">{{ favoritesService.count() }}</span>
           }
@@ -101,7 +101,6 @@
       <a routerLink="/produtos" [queryParams]="{ ordenar: 'novo' }" routerLinkActive="active" (click)="closeMobileMenu()">LANÇAMENTOS</a>
       <a routerLink="/produtos" [queryParams]="{ ordenar: 'mais-vendidos' }" routerLinkActive="active" (click)="closeMobileMenu()">MAIS VENDIDOS</a>
       <a routerLink="/cupons" routerLinkActive="active" (click)="closeMobileMenu()">CUPONS &amp; SORTEIOS</a>
-      <a routerLink="/vip" routerLinkActive="active" class="nav-vip-link" (click)="closeMobileMenu()">👑 ÁREA VIP</a>
       <a routerLink="/suporte" routerLinkActive="active" (click)="closeMobileMenu()">SUPORTE</a>
     </div>
   </nav>

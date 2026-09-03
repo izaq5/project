@@ -65,10 +65,10 @@
         <button
           type="button"
           class="tab-btn"
-          [class.active]="selectedCategory() === '10'"
-          (click)="setCategoryFilter('10')"
+          [class.active]="selectedCategory() === 'vip'"
+          (click)="setCategoryFilter('vip')"
         >
-          🎁 10% OFF (1ª Compra)
+          👑 Cupons VIP por Nicho
         </button>
         <button
           type="button"
@@ -76,15 +76,15 @@
           [class.active]="selectedCategory() === '15'"
           (click)="setCategoryFilter('15')"
         >
-          🎲 15% OFF (Geral)
+          🎲 Sorteio 15% (Geral)
         </button>
         <button
           type="button"
           class="tab-btn"
-          [class.active]="selectedCategory() === 'vip'"
-          (click)="setCategoryFilter('vip')"
+          [class.active]="selectedCategory() === 'sorteios-vip'"
+          (click)="setCategoryFilter('sorteios-vip')"
         >
-          👑 25% &amp; 30% OFF (VIP)
+          ⭐ Sorteios VIP (25% &amp; 30%)
         </button>
       </div>
     </div>
@@ -157,32 +157,101 @@
     </section>
   }
 
-  <!-- 1. CUPOM DE PRIMEIRA COMPRA (10% OFF) -->
-  @if (selectedCategory() === 'todos' || selectedCategory() === '10') {
-    <section class="coupon-section card">
+  <!-- SEÇÃO: CUPONS DE NICHO POR CATEGORIA & FIXOS (EXCLUSIVOS VIP) -->
+  @if (selectedCategory() === 'todos' || selectedCategory() === 'vip') {
+    <section class="coupon-section card vip-niche-section">
       <div class="section-title">
-        <h2><span class="badge badge-primary">NOVO CLIENTE</span> Cupom de Primeira Compra (10% OFF)</h2>
+        <h2><span class="badge badge-vip">👑 CLUBE VIP</span> Cupons por Nicho de Produto &amp; Descontos Exclusivos</h2>
       </div>
-      <div class="first-purchase-box">
-        <div class="coupon-tag">10% OFF</div>
-        <div class="coupon-details">
-          <strong>PRIMEIRA10 / BEMVINDO10</strong>
-          <p>Válido exclusivamente para a sua 1ª compra na CaputeStore. O sistema verifica automaticamente o seu histórico para evitar reutilização.</p>
-          @if (isFirstPurchaseAvailable) {
-            <span class="status-available">✅ Elegível para a sua próxima compra!</span>
-          } @else {
-            <span class="status-used">⚠️ Você já realizou sua primeira compra anteriormente.</span>
+
+      @if (authService.isVip()) {
+        <div class="niche-filter-bar">
+          <div class="niche-selector-wrap">
+            <label for="niche-select">🏷️ Selecionar Categoria / Nicho:</label>
+            <select id="niche-select" class="select niche-select" [value]="selectedNicheCategory()" (change)="setNicheCategory($any($event.target).value)">
+              @for (cat of nicheCategories; track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="niche-chips">
+            @for (cat of nicheCategories; track cat.id) {
+              <button
+                type="button"
+                class="niche-chip-btn"
+                [class.active]="selectedNicheCategory() === cat.id"
+                (click)="setNicheCategory(cat.id)"
+              >
+                {{ cat.name }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="vip-niche-grid">
+          @for (coupon of vipCoupons(); track coupon.code) {
+            <div class="vip-coupon-card card">
+              <div class="vip-coupon-card__header">
+                <span class="badge" [class.badge-vip]="coupon.discountPercent >= 25" [class.badge-primary]="coupon.discountPercent < 25">
+                  {{ coupon.discountPercent }}% OFF
+                </span>
+                @if (coupon.category) {
+                  <span class="niche-badge">📁 {{ coupon.category }}</span>
+                } @else {
+                  <span class="niche-badge global-badge">🌐 Toda a Loja</span>
+                }
+              </div>
+
+              <div class="vip-coupon-card__body">
+                <h3 class="coupon-code-title">{{ coupon.code }}</h3>
+                <p class="coupon-desc">{{ coupon.description }}</p>
+                @if (coupon.category) {
+                  <span class="coupon-hint">✓ Válido para itens de <strong>{{ coupon.category }}</strong></span>
+                } @else {
+                  <span class="coupon-hint">✓ Válido para qualquer produto da loja</span>
+                }
+              </div>
+
+              <div class="vip-coupon-card__actions">
+                <button type="button" class="btn btn-outline btn-sm" (click)="copyCode(coupon.code)">
+                  {{ copied() === coupon.code ? 'Copiado ✓' : 'Copiar Código' }}
+                </button>
+                <button type="button" class="btn btn-vip btn-sm" (click)="applyAndGoToCart(coupon.code)">
+                  🛒 Usar no Carrinho
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <div class="empty-niche-box">
+              <p>Nenhum cupom encontrado para esta categoria com o filtro atual.</p>
+            </div>
           }
         </div>
-        <div class="first-actions">
-          <button type="button" class="btn btn-primary" (click)="copyCode('PRIMEIRA10')">
-            {{ copied() === 'PRIMEIRA10' ? 'Copiado ✓' : 'Copiar Código' }}
-          </button>
-          <button type="button" class="btn btn-outline" (click)="applyAndGoToCart('PRIMEIRA10')">
-            🛒 Usar no Carrinho
-          </button>
+      } @else {
+        <!-- SÓ VÊ SE FOR VIP: BLOQUEIO COM BANNER EXCLUSIVO -->
+        <div class="vip-locked-box card">
+          <div class="locked-icon">🔒</div>
+          <div class="locked-content">
+            <span class="badge badge-vip">👑 EXCLUSIVO PARA MEMBROS VIP</span>
+            <h3>Cupons de Nicho por Categoria &amp; Descontos Fixos até 30% OFF</h3>
+            <p>
+              Os cupons de desconto fixo e cupons por nicho de produto (<strong>Games, Celulares, Notebooks, Fones, Monitores, Smartwatches e Acessórios</strong>) são ofertados exclusivamente para membros <strong>CaputeStore VIP</strong>.
+            </p>
+            <ul class="vip-locked-benefits">
+              <li>🎮 <strong>20% OFF em Games</strong> com cupom funcional exclusivo (<code>VIPGAMES20</code>)</li>
+              <li>📱 <strong>15% OFF em Celulares</strong> e <strong>15% OFF em Notebooks</strong></li>
+              <li>🎧 <strong>25% OFF em Fones</strong> e <strong>15% OFF em Monitores</strong></li>
+              <li>👑 <strong>Até 30% OFF fixo</strong> em qualquer produto do catálogo (<code>VIP30</code>)</li>
+            </ul>
+            <div class="locked-cta">
+              <a routerLink="/vip" class="btn btn-vip btn-lg">
+                ⚡ ASSINAR PLANO VIP POR R$ 20,00 PARA DESBLOQUEAR
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
+      }
     </section>
   }
 
@@ -227,7 +296,7 @@
   }
 
   <!-- 3. SORTEIOS PREMIUM & VIP (25% & 30% OFF) -->
-  @if (selectedCategory() === 'todos' || selectedCategory() === 'vip') {
+  @if (selectedCategory() === 'todos' || selectedCategory() === 'sorteios-vip') {
     <section class="coupon-section">
       <div class="section-title">
         <h2><span class="badge badge-vip">👑 PREMIUM &amp; VIP</span> Sorteios Exclusivos Brasil (25% e 30% OFF)</h2>

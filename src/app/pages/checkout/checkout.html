@@ -183,14 +183,14 @@
 
             @if (appliedCoupon()) {
               <div class="coupon-applied">
-                <span>Cupom <strong>{{ appliedCoupon()!.code }}</strong> aplicado ({{ appliedCoupon()!.discountPercent }}% OFF)</span>
+                <span>Cupom <strong>{{ appliedCoupon()!.code }}</strong> aplicado ({{ appliedCoupon()!.discountPercent }}% OFF{{ appliedCoupon()?.category ? ' em ' + appliedCoupon()?.category : '' }})</span>
                 <button type="button" (click)="removeCoupon()">Remover</button>
               </div>
             } @else if (couponMessage()) {
               <p class="coupon-msg" [class.error]="couponMessage()!.type === 'error'">{{ couponMessage()!.text }}</p>
             }
 
-            <p class="coupons-hint">Cupons disponíveis: <strong>BEMVINDO10</strong> (10% OFF) · <strong>PREMIUM15</strong> (15% OFF) &nbsp;|&nbsp; Exclusivos VIP: <strong>NEXUSVIP</strong> (25% OFF) · <strong>BLACK30</strong> (30% OFF)</p>
+            <p class="coupons-hint">👑 Cupons exclusivos de nicho e até 30% OFF estão disponíveis para <strong>Membros VIP</strong> na Central de Cupons.</p>
 
             <div class="step-actions">
               <button type="button" class="btn btn-outline" (click)="goToStep(1)">← Voltar</button>

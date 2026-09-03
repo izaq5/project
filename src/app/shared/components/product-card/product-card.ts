@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
@@ -25,9 +25,7 @@ export class ProductCard {
     return Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
   }
 
-  get isFavorite(): boolean {
-    return this.favoritesService.isFavorite(this.product().id);
-  }
+  isFavorite = computed(() => this.favoritesService.isFavorite(this.product().id));
 
   badgeLabel(): string {
     switch (this.product().badge) {
@@ -48,7 +46,7 @@ export class ProductCard {
   toggleFavorite(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.favoritesService.toggle(this.product().id);
-    this.toastService.info(this.isFavorite ? 'Adicionado aos favoritos.' : 'Removido dos favoritos.');
+    const isNowFav = this.favoritesService.toggle(this.product().id);
+    this.toastService.info(isNowFav ? '⭐ Adicionado aos favoritos!' : 'Removido dos favoritos.');
   }
 }

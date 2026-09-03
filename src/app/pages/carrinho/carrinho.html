@@ -49,7 +49,7 @@
               id="cart-coupon-input"
               type="text"
               class="input coupon-input"
-              placeholder="Ex: PRIMEIRA10, 30OFF-CAPUTE-8492"
+              placeholder="Ex: VIPGAMES20, VIP30, 15OFF-CAPUTE-1024"
               [value]="couponInput()"
               (input)="couponInput.set($any($event.target).value)"
             />
@@ -58,7 +58,7 @@
 
           @if (appliedCoupon()) {
             <div class="applied-coupon-pill">
-              <span>🏷️ <strong>{{ appliedCoupon()?.code }}</strong> (-{{ appliedCoupon()?.discountPercent }}%)</span>
+              <span>🏷️ <strong>{{ appliedCoupon()?.code }}</strong> (-{{ appliedCoupon()?.discountPercent }}%{{ appliedCoupon()?.category ? ' em ' + appliedCoupon()?.category : '' }})</span>
               <button type="button" class="remove-coupon-btn" (click)="removeCoupon()" title="Remover cupom">✕</button>
             </div>
           }
@@ -79,7 +79,7 @@
 
         @if (appliedCoupon()) {
           <div class="summary-row discount-row">
-            <span>Desconto ({{ appliedCoupon()?.discountPercent }}% OFF)</span>
+            <span>Desconto ({{ appliedCoupon()?.discountPercent }}% OFF{{ appliedCoupon()?.category ? ' em ' + appliedCoupon()?.category : '' }})</span>
             <span class="text-success">- R$ {{ discountAmount().toFixed(2).replace('.', ',') }}</span>
           </div>
         }
