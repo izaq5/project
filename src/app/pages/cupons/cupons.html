@@ -1,12 +1,12 @@
 <div class="container page cupons-page">
   <div class="page-header text-center">
-    <h1>🏷️ Central de Cupons &amp; Sorteios do Brasil Inteiro 🇧🇷</h1>
-    <p>Participe dos sorteios de cupons válidos para todo o território nacional. Ganhe descontos de até 30% OFF com entrega em qualquer estado!</p>
+    <h1>🏷️ Central de Cupons &amp; Ofertas CaputeStore 🇧🇷</h1>
+    <p>Resgate cupons com desconto imediato, confira prazos de validade e desbloqueios programados para todo o Brasil!</p>
     
     <!-- CRONÔMETRO AO VIVO DA APURAÇÃO -->
     <div class="live-timer-badge card">
       <span class="timer-icon">⏱️</span>
-      <span class="timer-label">PRÓXIMA APURAÇÃO NACIONAL EM:</span>
+      <span class="timer-label">PRÓXIMA APURAÇÃO DE COTAS EM:</span>
       <div class="timer-clock">
         <span class="t-box">{{ countdownHours().toString().padStart(2, '0') }}h</span> :
         <span class="t-box">{{ countdownMinutes().toString().padStart(2, '0') }}m</span> :
@@ -15,96 +15,198 @@
     </div>
   </div>
 
-  <!-- NATIONWIDE BANNER & STATE / CATEGORY FILTER BAR -->
-  <section class="coupon-section card brazil-banner-card">
-    <div class="brazil-header">
-      <div class="brazil-badge">🇧🇷 COBERTURA NACIONAL AO VIVO (27 ESTADOS)</div>
-      <h2>Sorteios de Cupons em Todos os Estados do Brasil</h2>
-      <p>
-        @if (selectedState() === 'Todos') {
-          Exibindo sorteios ativos para todo o território brasileiro.
-        } @else {
-          Exibindo sorteios regionais sincronizados para <strong>{{ selectedState() }}</strong>.
-        }
-      </p>
+  <!-- SELETOR PRINCIPAL DE ABAS: CUPONS DISPONÍVEIS vs. EM BREVE -->
+  <div class="main-tabs-container">
+    <div class="main-tabs card">
+      <button
+        type="button"
+        class="main-tab-btn"
+        [class.active]="mainTab() === 'disponiveis'"
+        (click)="setMainTab('disponiveis')"
+      >
+        <span class="tab-indicator green-dot"></span>
+        🟢 Cupons Disponíveis
+        <span class="tab-badge">{{ availableCoupons().length }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="main-tab-btn"
+        [class.active]="mainTab() === 'em-breve'"
+        (click)="setMainTab('em-breve')"
+      >
+        <span class="tab-indicator yellow-dot"></span>
+        ⏳ Em Breve / A Liberar
+        <span class="tab-badge upcoming-badge">{{ upcomingCoupons().length }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- ABA 1: CUPONS DISPONÍVEIS AGORA -->
+  <!-- ========================================================================= -->
+  @if (mainTab() === 'disponiveis') {
+    <!-- DESTAQUES RELÂMPAGO: 10% (6 HORAS) E 25% (PRODUTOS DE ALTO VALOR 1H30) -->
+    <div class="flash-deals-grid">
+      <!-- 1. CUPOM 10% OFF COM LIMITE DE 6 HORAS -->
+      <div class="flash-coupon-card card card-10">
+        <div class="fcc-badge-row">
+          <span class="badge badge-flash">⚡ RESGATE EM ATÉ 6 HORAS</span>
+          <span class="fcc-exp-tag">📅 Expira hoje</span>
+        </div>
+
+        <div class="fcc-main">
+          <div class="fcc-percent">10%<small>OFF</small></div>
+          <div class="fcc-details">
+            <h3>Cupom PRIMEIRA10</h3>
+            <p>10% de desconto especial na loja com limite de <strong>6 horas</strong> para o cliente resgatar.</p>
+            <div class="fcc-countdown-box">
+              <span class="fcc-clock-icon">⏳</span>
+              <span class="fcc-label">TEMPO RESTANTE:</span>
+              <strong class="fcc-timer">{{ formatTime(tenPercentSeconds()) }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="fcc-footer">
+          <div class="fcc-code-box">
+            <code>PRIMEIRA10</code>
+            <button type="button" class="btn-copy-mini" (click)="copyCode('PRIMEIRA10')">
+              {{ copied() === 'PRIMEIRA10' ? 'Copiado ✓' : 'Copiar' }}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-redirect"
+            (click)="claimAndRedirect({ code: 'PRIMEIRA10', discountPercent: 10 })"
+          >
+            🚀 Resgatar &amp; Ver Produtos Elegíveis →
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. CUPOM 25% OFF PARA PRODUTOS DE ALTO VALOR (MÍNIMO 1H30) -->
+      <div class="flash-coupon-card card card-25-luxury">
+        <div class="fcc-badge-row">
+          <span class="badge badge-luxury">💎 PRODUTOS DE ALTO VALOR (MIN. R$ 2.000)</span>
+          <span class="fcc-exp-tag luxury-tag">⏱️ 1h30 Cronômetro</span>
+        </div>
+
+        <div class="fcc-main">
+          <div class="fcc-percent luxury-percent">25%<small>OFF</small></div>
+          <div class="fcc-details">
+            <h3>Cupom ALTOVALOR25</h3>
+            <p>25% OFF exclusivo em notebooks, smartphones e produtos acima de <strong>R$ 2.000,00</strong>. Duração de 1h30!</p>
+            <div class="fcc-countdown-box luxury-clock-box">
+              <span class="fcc-clock-icon">💎</span>
+              <span class="fcc-label">EXPIRA EM:</span>
+              <strong class="fcc-timer">{{ formatTime(twentyFivePercentSeconds()) }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="fcc-footer">
+          <div class="fcc-code-box luxury-code-box">
+            <code>ALTOVALOR25</code>
+            <button type="button" class="btn-copy-mini" (click)="copyCode('ALTOVALOR25')">
+              {{ copied() === 'ALTOVALOR25' ? 'Copiado ✓' : 'Copiar' }}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-vip btn-redirect"
+            (click)="claimAndRedirect({ code: 'ALTOVALOR25', isHighValue: true, minProductPrice: 2000, discountPercent: 25 })"
+          >
+            💎 Ver Produtos de Alto Valor com 25% OFF →
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- PAINEL DE FILTROS AVANÇADOS -->
-    <div class="coupon-filter-bar card">
-      <div class="filter-row-top">
-        <div class="search-box-wrap">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            class="input search-input"
-            placeholder="Buscar cupom por código ou título..."
-            [value]="searchQuery()"
-            (input)="setSearchQuery($any($event.target).value)"
-          />
+    <!-- PAINEL DE FILTROS E BUSCA -->
+    <section class="coupon-section card brazil-banner-card">
+      <div class="brazil-header">
+        <div class="brazil-badge">🇧🇷 COBERTURA NACIONAL AO VIVO (27 ESTADOS)</div>
+        <h2>Cupons Ativos &amp; Sorteios Regionais em Tempo Real</h2>
+        <p>
+          @if (selectedState() === 'Todos') {
+            Exibindo cupons disponíveis e sorteios ativos para todo o território brasileiro.
+          } @else {
+            Exibindo sorteios regionais sincronizados para <strong>{{ selectedState() }}</strong>.
+          }
+        </p>
+      </div>
+
+      <div class="coupon-filter-bar card">
+        <div class="filter-row-top">
+          <div class="search-box-wrap">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              class="input search-input"
+              placeholder="Buscar cupom por código, produto ou categoria..."
+              [value]="searchQuery()"
+              (input)="setSearchQuery($any($event.target).value)"
+            />
+          </div>
+
+          <div class="state-filter-wrap">
+            <label for="state-select">📍 Estado (UF):</label>
+            <select id="state-select" class="select state-select" [value]="selectedState()" (change)="onStateChange($any($event.target).value)">
+              @for (st of brazilianStates; track st.code) {
+                <option [value]="st.code">{{ st.name }}</option>
+              }
+            </select>
+          </div>
         </div>
 
-        <div class="state-filter-wrap">
-          <label for="state-select">📍 Estado (UF):</label>
-          <select id="state-select" class="select state-select" [value]="selectedState()" (change)="onStateChange($any($event.target).value)">
-            @for (st of brazilianStates; track st.code) {
-              <option [value]="st.code">{{ st.name }}</option>
-            }
-          </select>
+        <div class="filter-tabs">
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="selectedCategory() === 'todos'"
+            (click)="setCategoryFilter('todos')"
+          >
+            ✨ Todos os Cupons
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="selectedCategory() === 'vip'"
+            (click)="setCategoryFilter('vip')"
+          >
+            👑 Cupons VIP por Nicho
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="selectedCategory() === '10'"
+            (click)="setCategoryFilter('10')"
+          >
+            ⚡ 10% 6 Horas
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="selectedCategory() === '25'"
+            (click)="setCategoryFilter('25')"
+          >
+            💎 25% Alto Valor
+          </button>
         </div>
       </div>
 
-      <div class="filter-tabs">
-        <button
-          type="button"
-          class="tab-btn"
-          [class.active]="selectedCategory() === 'todos'"
-          (click)="setCategoryFilter('todos')"
-        >
-          ✨ Todos os Cupons
-        </button>
-        <button
-          type="button"
-          class="tab-btn"
-          [class.active]="selectedCategory() === 'vip'"
-          (click)="setCategoryFilter('vip')"
-        >
-          👑 Cupons VIP por Nicho
-        </button>
-        <button
-          type="button"
-          class="tab-btn"
-          [class.active]="selectedCategory() === '15'"
-          (click)="setCategoryFilter('15')"
-        >
-          🎲 Sorteio 15% (Geral)
-        </button>
-        <button
-          type="button"
-          class="tab-btn"
-          [class.active]="selectedCategory() === 'sorteios-vip'"
-          (click)="setCategoryFilter('sorteios-vip')"
-        >
-          ⭐ Sorteios VIP (25% &amp; 30%)
-        </button>
-      </div>
-    </div>
-
-    <!-- FEED DE GANHADORES COM ANIMAÇÃO DE CARREGAMENTO -->
-    <div class="live-winners-section">
-      <div class="winners-header">
-        <h3>🔥 ÚLTIMOS CLIENTES CONTEMPLADOS EM {{ selectedState() === 'Todos' ? 'TODO O BRASIL' : selectedState() }}</h3>
-        @if (loadingState()) {
-          <span class="feed-spinner">🔄 Atualizando servidores de {{ selectedState() }}...</span>
-        }
-      </div>
-
-      @if (loadingState()) {
-        <div class="winners-loading-skeleton">
-          <div class="skeleton-chip"></div>
-          <div class="skeleton-chip"></div>
-          <div class="skeleton-chip"></div>
+      <!-- FEED DE GANHADORES REGIONAIS -->
+      <div class="live-winners-section">
+        <div class="winners-header">
+          <h3>🔥 ÚLTIMOS CLIENTES CONTEMPLADOS EM {{ selectedState() === 'Todos' ? 'TODO O BRASIL' : selectedState() }}</h3>
+          @if (loadingState()) {
+            <span class="feed-spinner">🔄 Atualizando servidores de {{ selectedState() }}...</span>
+          }
         </div>
-      } @else {
+
         <div class="winners-grid">
           @for (w of recentBrazilWinners(); track w.code + w.name) {
             <div class="winner-chip">
@@ -117,18 +219,16 @@
             </div>
           }
         </div>
-      }
-    </div>
-  </section>
+      </div>
+    </section>
 
-  <!-- SEÇÃO INTERATIVA: ROLETA DA SORTE CAPUTESTORE -->
-  @if (selectedCategory() === 'todos' || selectedCategory() === 'vip') {
+    <!-- ROLETA DA SORTE -->
     <section class="coupon-section card roulette-card">
       <div class="roulette-content">
         <div class="roulette-info">
           <span class="badge badge-primary">🎰 TESTE SUA SORTE</span>
           <h2>Roleta da Sorte Instantânea CaputeStore</h2>
-          <p>Gire a roleta interativa para tentar conquistar um cupom exclusivo surpresa de até 30% OFF imediatamente!</p>
+          <p>Gire a roleta interativa para conquistar um cupom exclusivo surpresa de até 30% OFF!</p>
         </div>
 
         <div class="roulette-action">
@@ -147,21 +247,20 @@
                 <span class="r-discount">{{ rouletteResult()?.discount }}</span>
                 <code>{{ rouletteResult()?.code }}</code>
               </div>
-              <button type="button" class="btn btn-outline btn-sm" (click)="applyAndGoToCart(rouletteResult()!.code)">
-                🛒 Usar no Carrinho
+              <button type="button" class="btn btn-primary btn-sm" (click)="claimAndRedirect({ code: rouletteResult()!.code })">
+                🛍️ Ver Produtos com este Cupom →
               </button>
             </div>
           }
         </div>
       </div>
     </section>
-  }
 
-  <!-- SEÇÃO: CUPONS DE NICHO POR CATEGORIA & FIXOS (EXCLUSIVOS VIP) -->
-  @if (selectedCategory() === 'todos' || selectedCategory() === 'vip') {
+    <!-- CUPONS VIP POR NICHO / CATEGORIA COM REDIRECIONAMENTO DIRETO -->
     <section class="coupon-section card vip-niche-section">
       <div class="section-title">
         <h2><span class="badge badge-vip">👑 CLUBE VIP</span> Cupons por Nicho de Produto &amp; Descontos Exclusivos</h2>
+        <p class="section-sub">Clique em qualquer cupom para ser redirecionado imediatamente aos produtos com o desconto aplicado!</p>
       </div>
 
       @if (authService.isVip()) {
@@ -191,7 +290,7 @@
 
         <div class="vip-niche-grid">
           @for (coupon of vipCoupons(); track coupon.code) {
-            <div class="vip-coupon-card card">
+            <div class="vip-coupon-card card" (click)="claimAndRedirect(coupon)">
               <div class="vip-coupon-card__header">
                 <span class="badge" [class.badge-vip]="coupon.discountPercent >= 25" [class.badge-primary]="coupon.discountPercent < 25">
                   {{ coupon.discountPercent }}% OFF
@@ -201,24 +300,21 @@
                 } @else {
                   <span class="niche-badge global-badge">🌐 Toda a Loja</span>
                 }
+                <span class="coupon-exp-pill">📅 {{ coupon.expiresAt || 'Hoje às 23:59' }}</span>
               </div>
 
               <div class="vip-coupon-card__body">
                 <h3 class="coupon-code-title">{{ coupon.code }}</h3>
                 <p class="coupon-desc">{{ coupon.description }}</p>
-                @if (coupon.category) {
-                  <span class="coupon-hint">✓ Válido para itens de <strong>{{ coupon.category }}</strong></span>
-                } @else {
-                  <span class="coupon-hint">✓ Válido para qualquer produto da loja</span>
-                }
+                <div class="click-hint">👉 Clique para ir direto aos produtos elegíveis</div>
               </div>
 
-              <div class="vip-coupon-card__actions">
+              <div class="vip-coupon-card__actions" (click)="$event.stopPropagation()">
                 <button type="button" class="btn btn-outline btn-sm" (click)="copyCode(coupon.code)">
-                  {{ copied() === coupon.code ? 'Copiado ✓' : 'Copiar Código' }}
+                  {{ copied() === coupon.code ? 'Copiado ✓' : 'Copiar' }}
                 </button>
-                <button type="button" class="btn btn-vip btn-sm" (click)="applyAndGoToCart(coupon.code)">
-                  🛒 Usar no Carrinho
+                <button type="button" class="btn btn-primary btn-sm" (click)="claimAndRedirect(coupon)">
+                  🛍️ Ver Produtos →
                 </button>
               </div>
             </div>
@@ -229,7 +325,6 @@
           }
         </div>
       } @else {
-        <!-- SÓ VÊ SE FOR VIP: BLOQUEIO COM BANNER EXCLUSIVO -->
         <div class="vip-locked-box card">
           <div class="locked-icon">🔒</div>
           <div class="locked-content">
@@ -238,12 +333,6 @@
             <p>
               Os cupons de desconto fixo e cupons por nicho de produto (<strong>Games, Celulares, Notebooks, Fones, Monitores, Smartwatches e Acessórios</strong>) são ofertados exclusivamente para membros <strong>CaputeStore VIP</strong>.
             </p>
-            <ul class="vip-locked-benefits">
-              <li>🎮 <strong>20% OFF em Games</strong> com cupom funcional exclusivo (<code>VIPGAMES20</code>)</li>
-              <li>📱 <strong>15% OFF em Celulares</strong> e <strong>15% OFF em Notebooks</strong></li>
-              <li>🎧 <strong>25% OFF em Fones</strong> e <strong>15% OFF em Monitores</strong></li>
-              <li>👑 <strong>Até 30% OFF fixo</strong> em qualquer produto do catálogo (<code>VIP30</code>)</li>
-            </ul>
             <div class="locked-cta">
               <a routerLink="/vip" class="btn btn-vip btn-lg">
                 ⚡ ASSINAR PLANO VIP POR R$ 20,00 PARA DESBLOQUEAR
@@ -253,10 +342,8 @@
         </div>
       }
     </section>
-  }
 
-  <!-- 2. SORTEIO DE CUPONS NORMAIS (15% OFF - 25 CUPONS) -->
-  @if (selectedCategory() === 'todos' || selectedCategory() === '15') {
+    <!-- SORTEIOS NACIONAIS 15% E 25%/30% -->
     <section class="coupon-section">
       <div class="section-title">
         <h2>🎁 Sorteio Nacional de Cupons de 15% OFF (25 Contemplados)</h2>
@@ -269,7 +356,7 @@
               <span class="raffle-percent">15% OFF</span>
               <div class="raffle-info">
                 <h3>{{ c.title }}</h3>
-                <p>Distribuído entre os clientes cadastrados participantes de todo o Brasil. Cada ganhador recebe seu próprio código individual.</p>
+                <p>Distribuído entre clientes cadastrados de todo o Brasil. Código individual único para compras na loja.</p>
                 <div class="quota-progress">
                   <span>Cotas distribuídas nacionalmente: <strong>{{ c.claimedCount }} / {{ c.totalCoupons }}</strong></span>
                 </div>
@@ -282,7 +369,7 @@
                   @if (participating() === c.id) {
                     <span class="spin-loader">🎲 Processando Sorteio...</span>
                   } @else {
-                    🎲 PARTICIPAR DO SORTEIO BRASIL 15%
+                    🎲 PARTICIPAR DO SORTEIO 15%
                   }
                 </button>
               } @else {
@@ -295,53 +382,87 @@
     </section>
   }
 
-  <!-- 3. SORTEIOS PREMIUM & VIP (25% & 30% OFF) -->
-  @if (selectedCategory() === 'todos' || selectedCategory() === 'sorteios-vip') {
-    <section class="coupon-section">
-      <div class="section-title">
-        <h2><span class="badge badge-vip">👑 PREMIUM &amp; VIP</span> Sorteios Exclusivos Brasil (25% e 30% OFF)</h2>
+  <!-- ========================================================================= -->
+  <!-- ABA 2: CUPONS EM BREVE / A LIBERAR -->
+  <!-- ========================================================================= -->
+  @if (mainTab() === 'em-breve') {
+    <section class="upcoming-section">
+      <div class="upcoming-banner card">
+        <div class="upcoming-badge">⏳ PRÓXIMOS LANÇAMENTOS AGENDADOS</div>
+        <h2>Cupons Programados para Liberação em Horários Específicos</h2>
+        <p>Acompanhe a contagem regressiva e prepare seu carrinho antes que as cotas se esgotem!</p>
       </div>
 
-      @if (!authService.isPremium()) {
-        <div class="vip-banner card">
-          <div class="vip-banner-text">
-            <p>🔒 Estes sorteios são restritos a membros <strong>Premium e VIP CaputeStore</strong>. Assine o Plano VIP por apenas <strong>R$ 20,00</strong> para desbloquear!</p>
+      <div class="upcoming-grid">
+        <!-- 1. CUPOM 15% LIBERADO A PARTIR DE CERTO HORÁRIO (18:00h) -->
+        <div class="upcoming-card card card-upcoming-15">
+          <div class="upcoming-header">
+            <span class="badge badge-schedule">🕒 LIBERAÇÃO HOJE ÀS 18:00H</span>
+            <span class="upcoming-status-tag">🔒 Bloqueado no Momento</span>
           </div>
-          <a routerLink="/vip" class="btn btn-vip">QUERO SER VIP (R$ 20,00)</a>
-        </div>
-      }
 
-      <div class="grid-raffles">
-        @for (c of drawService.campaigns(); track c.id) {
-          @if (c.requiresPremium) {
-            <div class="raffle-card card premium-raffle" [class.locked]="!authService.isPremium()">
-              <div class="raffle-header">
-                <span class="raffle-percent vip-percent">{{ c.discount }}% OFF</span>
-                <div class="raffle-info">
-                  <h3>{{ c.title }}</h3>
-                  <p>Cota total de <strong>{{ c.totalCoupons }} cupons</strong> exclusivos para clientes Premium/VIP do Brasil.</p>
-                  <div class="quota-progress">
-                    <span>Disponíveis: <strong>{{ c.totalCoupons - c.claimedCount }} cupons restantes</strong></span>
-                  </div>
-                </div>
-              </div>
+          <div class="upcoming-body">
+            <div class="upcoming-percent">15%<small>OFF</small></div>
+            <div class="upcoming-info">
+              <h3>Cupom HORA15</h3>
+              <p>15% de desconto para todos os clientes, disponível para resgate <strong>a partir das 18:00h</strong> de hoje.</p>
 
-              <div class="raffle-actions">
-                @if (authService.isPremium()) {
-                  <button type="button" class="btn btn-vip" [disabled]="participating() === c.id" (click)="participate(c.id)">
-                    @if (participating() === c.id) {
-                      <span class="spin-loader">👑 Validando Cota VIP...</span>
-                    } @else {
-                      👑 RESGATAR CUPOM {{ c.discount }}%
-                    }
-                  </button>
-                } @else {
-                  <a routerLink="/vip" class="btn btn-outline">🔒 Desbloquear com Plano VIP (R$ 20)</a>
-                }
+              <div class="unlock-timer-box">
+                <span class="clock-anim">⏱️</span>
+                <span class="unlock-label">DESBLOQUEIA EM:</span>
+                <strong class="unlock-clock">{{ formatTime(fifteenPercentSeconds()) }}</strong>
               </div>
             </div>
-          }
-        }
+          </div>
+
+          <div class="upcoming-actions">
+            <button type="button" class="btn btn-schedule" (click)="claimUpcomingCoupon({ code: 'HORA15', discountPercent: 15, startsAt: '18:00' })">
+              🔔 Ativar Lembrete para 18:00h
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline"
+              (click)="claimAndRedirect({ code: 'HORA15', discountPercent: 15 })"
+            >
+              👀 Ver Produtos que Receberão o Desconto →
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. FLASH DROP NOTURNO 30% OFF (22:00h) -->
+        <div class="upcoming-card card card-upcoming-30">
+          <div class="upcoming-header">
+            <span class="badge badge-night">🌙 SUPER DROP NOTURNO ÀS 22:00H</span>
+            <span class="upcoming-status-tag">🔒 Bloqueado no Momento</span>
+          </div>
+
+          <div class="upcoming-body">
+            <div class="upcoming-percent night-percent">30%<small>OFF</small></div>
+            <div class="upcoming-info">
+              <h3>Cupom NOTURNO30</h3>
+              <p>Desconto relâmpago noturno para compras das 22h às 06h. Cotas limitadas para os mais rápidos!</p>
+
+              <div class="unlock-timer-box night-box">
+                <span class="clock-anim">🌙</span>
+                <span class="unlock-label">LIBERAÇÃO PROGRAMADA:</span>
+                <strong class="unlock-clock">Hoje às 22:00h</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="upcoming-actions">
+            <button type="button" class="btn btn-schedule" (click)="claimUpcomingCoupon({ code: 'NOTURNO30', discountPercent: 30, startsAt: '22:00' })">
+              🔔 Ativar Lembrete para 22:00h
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline"
+              (click)="claimAndRedirect({ code: 'NOTURNO30', discountPercent: 30 })"
+            >
+              👀 Ver Produtos Elegíveis →
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   }
@@ -360,8 +481,8 @@
               <button type="button" class="btn btn-primary btn-sm" (click)="copyCode(code)">
                 {{ copied() === code ? 'Copiado ✓' : 'Copiar' }}
               </button>
-              <button type="button" class="btn btn-outline btn-sm" (click)="applyAndGoToCart(code)">
-                🛒 Usar no Carrinho
+              <button type="button" class="btn btn-outline btn-sm" (click)="claimAndRedirect({ code: code })">
+                🛍️ Ver Produtos com este Cupom →
               </button>
             </div>
           </div>

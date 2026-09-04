@@ -23,9 +23,12 @@ export interface WinnerFeedItem {
 export class Cupons implements OnInit, OnDestroy {
   drawService = inject(DrawService);
   authService = inject(AuthService);
-  private couponService = inject(CouponService);
+  couponService = inject(CouponService);
   private toastService = inject(ToastService);
   private router = inject(Router);
+
+  // Controle de Abas Principais (Disponíveis vs. Em Breve)
+  mainTab = signal<'disponiveis' | 'em-breve'>('disponiveis');
 
   copied = signal<string | null>(null);
   participating = signal<string | null>(null);
@@ -36,6 +39,22 @@ export class Cupons implements OnInit, OnDestroy {
   loadingState = signal<boolean>(false);
   spinningWheel = signal<boolean>(false);
   rouletteResult = signal<{ discount: string; code: string } | null>(null);
+
+  // Contagem regressiva ao vivo da apuração nacional
+  countdownHours = signal(3);
+  countdownMinutes = signal(42);
+  countdownSeconds = signal(18);
+
+  // 1. Cronômetro Regressivo para Cupom 10% (6 Horas para resgatar)
+  tenPercentSeconds = signal(5 * 3600 + 48 * 60 + 35); // 5h 48m 35s restantes de 6h
+  
+  // 2. Cronômetro Regressivo para Cupom 25% Produtos Alto Valor (Mínimo 1h30)
+  twentyFivePercentSeconds = signal(1 * 3600 + 29 * 60 + 50); // 1h 29m 50s restantes de 1h30
+
+  // 3. Cronômetro Regressivo para Cupom 15% Em Breve (Desbloqueio às 18:00h)
+  fifteenPercentSeconds = signal(4 * 3600 + 15 * 60 + 20); // Tempo restante para as 18h
+
+  private timerInterval: any;
 
   readonly nicheCategories = [
     { id: 'Todas', name: '✨ Todas as Categorias' },
@@ -48,32 +67,6 @@ export class Cupons implements OnInit, OnDestroy {
     { id: 'Acessórios', name: '🔌 Acessórios' },
     { id: 'Geral', name: '👑 Cupons Globais VIP' }
   ];
-
-  vipCoupons = computed(() => {
-    if (!this.authService.isVip()) return [];
-    const cat = this.selectedNicheCategory();
-    const query = this.searchQuery().trim().toLowerCase();
-    let list = this.couponService.getVipCoupons(cat);
-
-    if (query) {
-      list = list.filter(c =>
-        c.code.toLowerCase().includes(query) ||
-        c.description.toLowerCase().includes(query) ||
-        (c.category && c.category.toLowerCase().includes(query))
-      );
-    }
-    return list;
-  });
-
-  setNicheCategory(category: string): void {
-    this.selectedNicheCategory.set(category);
-  }
-
-  // Relógio Regressivo em Tempo Real
-  countdownHours = signal(3);
-  countdownMinutes = signal(42);
-  countdownSeconds = signal(18);
-  private timerInterval: any;
 
   readonly brazilianStates = [
     { code: 'Todos', name: '🇧🇷 Brasil Inteiro (Todos os 27 Estados)' },
@@ -107,33 +100,33 @@ export class Cupons implements OnInit, OnDestroy {
   ];
 
   private readonly stateCitiesMap: Record<string, string[]> = {
-    SP: ['São Paulo', 'Campinas', 'Santos', 'Ribeirão Preto', 'Sorocaba', 'Bauru'],
-    RJ: ['Rio de Janeiro', 'Niterói', 'Petrópolis', 'Volta Redonda', 'Macaé'],
+    SP: ['São Paulo', 'Campinas', 'Santos', 'Ribeirão Preto', 'Sorocaba'],
+    RJ: ['Rio de Janeiro', 'Niterói', 'Petrópolis', 'Volta Redonda'],
     MG: ['Belo Horizonte', 'Uberlândia', 'Juiz de Fora', 'Montes Claros'],
-    RS: ['Porto Alegre', 'Caxias do Sul', 'Pelotas', 'Canoas', 'Passo Fundo'],
-    BA: ['Salvador', 'Feira de Santana', 'Vitória da Conquista', 'Ilhéus'],
-    PR: ['Curitiba', 'Londrina', 'Maringá', 'Cascavel', 'Ponta Grossa'],
-    SC: ['Florianópolis', 'Joinville', 'Blumenau', 'Chapecó', 'Criciúma'],
-    CE: ['Fortaleza', 'Caucaia', 'Juazeiro do Norte', 'Sobral'],
-    PE: ['Recife', 'Jaboatão dos Guararapes', 'Olinda', 'Caruaru'],
-    GO: ['Goiânia', 'Aparecida de Goiânia', 'Anápolis', 'Rio Verde'],
-    DF: ['Brasília', 'Taguatinga', 'Ceilândia', 'Águas Claras'],
-    AM: ['Manaus', 'Parintins', 'Itacoatiara', 'Manacapuru'],
-    ES: ['Vitória', 'Vila Velha', 'Serra', 'Cariacica'],
-    MT: ['Cuiabá', 'Várzea Grande', 'Rondonópolis', 'Sinop'],
-    MS: ['Campo Grande', 'Dourados', 'Três Lagoas', 'Corumbá'],
-    PA: ['Belém', 'Ananindeua', 'Santarém', 'Marabá'],
-    MA: ['São Luís', 'Imperatriz', 'Timon', 'Caxias'],
-    PB: ['João Pessoa', 'Campina Grande', 'Santa Rita', 'Patos'],
-    RN: ['Natal', 'Mossoró', 'Parnamirim', 'Caicó'],
-    AL: ['Maceió', 'Arapiraca', 'Rio Largo', 'Palmeira dos Índios'],
-    PI: ['Teresina', 'Parnaíba', 'Picos', 'Floriano'],
-    SE: ['Aracaju', 'Nossa Senhora do Socorro', 'Lagarto', 'Itabaiana'],
-    RO: ['Porto Velho', 'Ji-Paraná', 'Ariquemes', 'Vilhena'],
-    AC: ['Rio Branco', 'Cruzeiro do Sul', 'Sena Madureira'],
-    AP: ['Macapá', 'Santana', 'Laranjal do Jari'],
-    RR: ['Boa Vista', 'Rorainópolis', 'Caracaraí'],
-    TO: ['Palmas', 'Araguaína', 'Gurupi', 'Porto Nacional'],
+    RS: ['Porto Alegre', 'Caxias do Sul', 'Pelotas', 'Passo Fundo'],
+    BA: ['Salvador', 'Feira de Santana', 'Vitória da Conquista'],
+    PR: ['Curitiba', 'Londrina', 'Maringá', 'Cascavel'],
+    SC: ['Florianópolis', 'Joinville', 'Blumenau', 'Chapecó'],
+    CE: ['Fortaleza', 'Caucaia', 'Juazeiro do Norte'],
+    PE: ['Recife', 'Jaboatão dos Guararapes', 'Caruaru'],
+    GO: ['Goiânia', 'Aparecida de Goiânia', 'Anápolis'],
+    DF: ['Brasília', 'Taguatinga', 'Ceilândia'],
+    AM: ['Manaus', 'Parintins'],
+    ES: ['Vitória', 'Vila Velha', 'Serra'],
+    MT: ['Cuiabá', 'Várzea Grande'],
+    MS: ['Campo Grande', 'Dourados'],
+    PA: ['Belém', 'Ananindeua', 'Santarém'],
+    MA: ['São Luís', 'Imperatriz'],
+    PB: ['João Pessoa', 'Campina Grande'],
+    RN: ['Natal', 'Mossoró'],
+    AL: ['Maceió', 'Arapiraca'],
+    PI: ['Teresina', 'Parnaíba'],
+    SE: ['Aracaju', 'Nossa Senhora do Socorro'],
+    RO: ['Porto Velho', 'Ji-Paraná'],
+    AC: ['Rio Branco', 'Cruzeiro do Sul'],
+    AP: ['Macapá', 'Santana'],
+    RR: ['Boa Vista'],
+    TO: ['Palmas', 'Araguaína'],
   };
 
   private readonly initialWinners: WinnerFeedItem[] = [
@@ -144,14 +137,60 @@ export class Cupons implements OnInit, OnDestroy {
     { name: 'Felipe T.', cityState: 'Belo Horizonte / MG', discount: '30% OFF', code: '30OFF-CAPUTE-5241', timeAgo: 'há 50 min' },
     { name: 'Amanda C.', cityState: 'Recife / PE', discount: '15% OFF', code: '15OFF-CAPUTE-9812', timeAgo: 'há 1 hora' },
     { name: 'Gabriel K.', cityState: 'Brasília / DF', discount: '25% OFF', code: '25OFF-CAPUTE-4410', timeAgo: 'há 2 horas' },
-    { name: 'Juliana P.', cityState: 'Florianópolis / SC', discount: '30% OFF', code: '30OFF-CAPUTE-9921', timeAgo: 'há 3 horas' },
   ];
 
   recentBrazilWinners = signal<WinnerFeedItem[]>(this.initialWinners);
 
+  // Lista de Cupons Disponíveis com filtros reativos
+  availableCoupons = computed(() => {
+    const query = this.searchQuery().trim().toLowerCase();
+    const cat = this.selectedCategory();
+    let list = this.couponService.getAvailableCoupons();
+
+    if (cat === 'vip') {
+      list = list.filter(c => c.isPremiumOnly);
+    } else if (cat === '10') {
+      list = list.filter(c => c.discountPercent === 10);
+    } else if (cat === '25') {
+      list = list.filter(c => c.discountPercent === 25);
+    }
+
+    if (query) {
+      list = list.filter(c =>
+        c.code.toLowerCase().includes(query) ||
+        c.description.toLowerCase().includes(query) ||
+        (c.category && c.category.toLowerCase().includes(query))
+      );
+    }
+    return list;
+  });
+
+  // Lista de Cupons Em Breve
+  upcomingCoupons = computed(() => {
+    return this.couponService.getUpcomingCouponsList();
+  });
+
+  // Cupons VIP por Nicho
+  vipCoupons = computed(() => {
+    if (!this.authService.isVip()) return [];
+    const cat = this.selectedNicheCategory();
+    const query = this.searchQuery().trim().toLowerCase();
+    let list = this.couponService.getVipCoupons(cat);
+
+    if (query) {
+      list = list.filter(c =>
+        c.code.toLowerCase().includes(query) ||
+        c.description.toLowerCase().includes(query) ||
+        (c.category && c.category.toLowerCase().includes(query))
+      );
+    }
+    return list;
+  });
+
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
       this.timerInterval = setInterval(() => {
+        // Cronômetro da Apuração
         let sec = this.countdownSeconds() - 1;
         let min = this.countdownMinutes();
         let hr = this.countdownHours();
@@ -162,14 +201,27 @@ export class Cupons implements OnInit, OnDestroy {
           if (min < 0) {
             min = 59;
             hr--;
-            if (hr < 0) {
-              hr = 5;
-            }
+            if (hr < 0) hr = 5;
           }
         }
         this.countdownSeconds.set(sec);
         this.countdownMinutes.set(min);
         this.countdownHours.set(hr);
+
+        // 1. Cronômetro 10% (6 Horas)
+        if (this.tenPercentSeconds() > 0) {
+          this.tenPercentSeconds.update(s => s - 1);
+        }
+
+        // 2. Cronômetro 25% Alto Valor (1h30)
+        if (this.twentyFivePercentSeconds() > 0) {
+          this.twentyFivePercentSeconds.update(s => s - 1);
+        }
+
+        // 3. Cronômetro 15% Em Breve (Desbloqueio às 18:00h)
+        if (this.fifteenPercentSeconds() > 0) {
+          this.fifteenPercentSeconds.update(s => s - 1);
+        }
       }, 1000);
     }
   }
@@ -180,12 +232,65 @@ export class Cupons implements OnInit, OnDestroy {
     }
   }
 
+  formatTime(totalSec: number): string {
+    const h = Math.floor(totalSec / 3600).toString().padStart(2, '0');
+    const m = Math.floor((totalSec % 3600) / 60).toString().padStart(2, '0');
+    const s = Math.floor(totalSec % 60).toString().padStart(2, '0');
+    return `${h}h ${m}m ${s}s`;
+  }
+
+  setMainTab(tab: 'disponiveis' | 'em-breve'): void {
+    this.mainTab.set(tab);
+  }
+
+  setNicheCategory(category: string): void {
+    this.selectedNicheCategory.set(category);
+  }
+
+  setCategoryFilter(cat: string): void {
+    this.selectedCategory.set(cat);
+  }
+
+  setSearchQuery(query: string): void {
+    this.searchQuery.set(query);
+  }
+
   get isFirstPurchaseAvailable(): boolean {
     return !(this.authService.currentUser()?.hasMadeFirstPurchase);
   }
 
   get userWonCoupons(): string[] {
     return this.authService.currentUser()?.wonCoupons || [];
+  }
+
+  // REDIRECIONAMENTO DIRETO PARA OS PRODUTOS COM ESTE CUPOM
+  claimAndRedirect(coupon: { code: string; category?: string; minProductPrice?: number; isHighValue?: boolean; discountPercent?: number }): void {
+    this.copyCode(coupon.code);
+    this.couponService.setGlobalCoupon(coupon.code);
+
+    const queryParams: Record<string, string | number> = {
+      cupom: coupon.code
+    };
+
+    if (coupon.isHighValue || (coupon.minProductPrice && coupon.minProductPrice >= 2000)) {
+      queryParams['minPrice'] = 2000;
+      queryParams['altoValor'] = 1;
+    }
+
+    if (coupon.category && coupon.category.toLowerCase() !== 'todas' && coupon.category.toLowerCase() !== 'geral') {
+      queryParams['categoria'] = coupon.category;
+    }
+
+    this.toastService.success(`🎉 Cupom ${coupon.code} ativado! Redirecionando para os produtos elegíveis...`);
+    
+    setTimeout(() => {
+      this.router.navigate(['/produtos'], { queryParams });
+    }, 400);
+  }
+
+  // AVISO DE CUPOM EM BREVE
+  claimUpcomingCoupon(coupon: { code: string; discountPercent?: number; startsAt?: string }): void {
+    this.toastService.info(`🔔 Cupom ${coupon.code} (${coupon.discountPercent || 15}% OFF) agendado para liberar às ${coupon.startsAt || '18:00h'}! Fique ligado.`);
   }
 
   onStateChange(uf: string): void {
@@ -227,16 +332,8 @@ export class Cupons implements OnInit, OnDestroy {
         ];
         this.recentBrazilWinners.set(stateSpecificWinners);
       }
-      this.toastService.info(`Servidores do estado (${uf}) conectados com sucesso!`);
-    }, 450);
-  }
-
-  setCategoryFilter(cat: string): void {
-    this.selectedCategory.set(cat);
-  }
-
-  setSearchQuery(query: string): void {
-    this.searchQuery.set(query);
+      this.toastService.info(`Servidores sincronizados para ${uf}!`);
+    }, 400);
   }
 
   async participate(drawId: string): Promise<void> {
@@ -275,7 +372,7 @@ export class Cupons implements OnInit, OnDestroy {
       this.spinningWheel.set(false);
       this.authService.addWonCoupon(generatedCode);
       this.toastService.success(`🎉 ROLETEADO COM SUCESSO! Você ganhou o cupom ${chosenDiscount}: ${generatedCode}`);
-    }, 2000);
+    }, 1800);
   }
 
   copyCode(code: string): void {
@@ -284,7 +381,7 @@ export class Cupons implements OnInit, OnDestroy {
     }
     this.couponService.setGlobalCoupon(code);
     this.copied.set(code);
-    this.toastService.success(`Cupom ${code} copiado com sucesso!`);
+    this.toastService.success(`Cupom ${code} copiado!`);
     setTimeout(() => this.copied.set(null), 2000);
   }
 

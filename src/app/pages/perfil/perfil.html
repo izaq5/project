@@ -13,8 +13,12 @@
 
       <div class="info">
         <h1>{{ user.name }}</h1>
-        <span>{{ user.email }}</span>
-        @if (user.phone) { <span>{{ user.phone }}</span> }
+        <span class="user-meta-email">📧 {{ user.email }}</span>
+        <div class="user-meta-details">
+          @if (user.cpf) { <span class="meta-tag">🪪 CPF: {{ user.cpf }}</span> }
+          @if (user.birthDate) { <span class="meta-tag">🎂 Nasc: {{ user.birthDate }}</span> }
+          @if (user.phone) { <span class="meta-tag">📱 {{ user.phone }}</span> }
+        </div>
         @if (user.exclusiveMember) {
           <span class="badge badge-exclusive">Membro CaputeStore VIP</span>
         } @else {

@@ -20,6 +20,9 @@ export class Produtos {
   selectedCategory = signal<string | null>(null);
   onlyExclusive = signal(false);
   maxPrice = signal<number>(30000);
+  minPrice = signal<number | null>(null);
+  activeCoupon = signal<string | null>(null);
+  isHighValue = signal(false);
   sort = signal('relevancia');
   filtersOpen = signal(false);
 
@@ -29,6 +32,11 @@ export class Produtos {
       this.selectedCategory.set(params.get('categoria'));
       this.onlyExclusive.set(params.get('exclusivo') === '1');
       this.sort.set(params.get('ordenar') ?? 'relevancia');
+      this.activeCoupon.set(params.get('cupom'));
+      this.isHighValue.set(params.get('altoValor') === '1');
+
+      const minP = params.get('minPrice');
+      this.minPrice.set(minP ? Number(minP) : null);
     });
   }
 
@@ -38,9 +46,24 @@ export class Produtos {
       category: this.selectedCategory(),
       onlyExclusive: this.onlyExclusive(),
       maxPrice: this.maxPrice(),
+      minPrice: this.minPrice() ?? undefined,
       sort: this.sort(),
     })
   );
+
+  clearCouponFilter(): void {
+    this.activeCoupon.set(null);
+    this.minPrice.set(null);
+    this.isHighValue.set(false);
+    this.router.navigate([], {
+      queryParams: {
+        cupom: null,
+        minPrice: null,
+        altoValor: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
 
   selectCategory(cat: string | null): void {
     this.selectedCategory.set(cat);

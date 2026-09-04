@@ -10,6 +10,13 @@ export interface Coupon {
   isFirstPurchaseOnly?: boolean;
   isPremiumOnly?: boolean;
   assignedUserId?: string;
+  status?: 'available' | 'upcoming' | 'expired';
+  expiresAt?: string;
+  expiresInSeconds?: number;
+  startsAt?: string;
+  minProductPrice?: number;
+  badgeTag?: string;
+  isHighValue?: boolean;
 }
 
 export interface CouponValidationResult {

@@ -8,7 +8,9 @@ export interface RegisterPayload {
   name: string;
   email: string;
   password: string;
-  phone?: string;
+  phone: string;
+  cpf: string;
+  birthDate: string;
   exclusiveMember: boolean;
 }
 
@@ -29,17 +31,41 @@ export class AuthService {
 
   register(data: RegisterPayload): AuthResult {
     if (!data.name.trim() || !data.email.trim() || data.password.length < 6) {
-      return { success: false, message: 'Preencha todos os campos corretamente. A senha deve ter ao menos 6 caracteres.' };
+      return { success: false, message: 'Preencha todos os campos obrigatórios. A senha deve ter ao menos 6 caracteres.' };
     }
+
+    if (!data.cpf || !data.cpf.trim()) {
+      return { success: false, message: 'O CPF é obrigatório para cadastro.' };
+    }
+
+    if (!data.phone || !data.phone.trim()) {
+      return { success: false, message: 'O telefone de contato é obrigatório.' };
+    }
+
+    if (!data.birthDate || !data.birthDate.trim()) {
+      return { success: false, message: 'A data de nascimento é obrigatória.' };
+    }
+
+    const cleanCpf = data.cpf.replace(/\D/g, '');
+    if (cleanCpf.length !== 11) {
+      return { success: false, message: 'O CPF informado deve conter 11 dígitos válidos.' };
+    }
+
     if (this.users.some((u) => u.email.toLowerCase() === data.email.trim().toLowerCase())) {
       return { success: false, message: 'Este e-mail já está cadastrado.' };
+    }
+
+    if (this.users.some((u) => (u.cpf || '').replace(/\D/g, '') === cleanCpf)) {
+      return { success: false, message: 'Este CPF já está cadastrado em outra conta.' };
     }
 
     const newUser: StoredUser = {
       id: this.generateId(),
       name: data.name.trim(),
       email: data.email.trim(),
-      phone: data.phone?.trim(),
+      phone: data.phone.trim(),
+      cpf: data.cpf.trim(),
+      birthDate: data.birthDate.trim(),
       exclusiveMember: data.exclusiveMember,
       isVip: data.exclusiveMember,
       isPremium: data.exclusiveMember,

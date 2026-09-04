@@ -3,14 +3,14 @@
     <div class="auth-header">
       <span class="logo-bolt">⚡</span>
       <h1><span class="text-primary">CAPUTE</span> STORE</h1>
-      <p>Crie sua conta agora e ganhe <strong>10% OFF</strong> na sua 1ª compra!</p>
+      <p>Crie sua conta agora e garanta <strong>10% OFF</strong> na sua 1ª compra!</p>
     </div>
 
     <div class="welcome-coupon-banner">
       <span class="banner-icon">🎁</span>
       <div class="banner-text">
         <strong>Cupom de Boas-Vindas Liberado!</strong>
-        <p>Ao se cadastrar, seu código <code>BEMVINDO10</code> (10% OFF) será ativado automaticamente.</p>
+        <p>Ao se cadastrar, seu código <code>PRIMEIRA10</code> (10% OFF por 6 horas) estará liberado para uso.</p>
       </div>
     </div>
 
@@ -19,31 +19,74 @@
         <div class="alert alert-error">{{ errorMessage() }}</div>
       }
 
+      <!-- NOME COMPLETO -->
       <div class="field">
-        <label>Nome completo <span class="req">*</span></label>
-        <input class="input" [class.invalid]="field('name')" formControlName="name" placeholder="Seu nome completo" />
-        @if (field('name')) { <span class="error-msg">Informe seu nome.</span> }
+        <label>Nome Completo <span class="req">*</span></label>
+        <input class="input" [class.invalid]="field('name')" formControlName="name" placeholder="Ex: Ana Clara Silva" />
+        @if (field('name')) { <span class="error-msg">Informe seu nome completo (mínimo 3 letras).</span> }
       </div>
 
+      <!-- E-MAIL -->
       <div class="field">
         <label>E-mail <span class="req">*</span></label>
         <input class="input" [class.invalid]="field('email')" type="email" formControlName="email" placeholder="seuemail@exemplo.com" />
-        @if (field('email')) { <span class="error-msg">Informe um e-mail válido.</span> }
+        @if (field('email')) { <span class="error-msg">Informe um endereço de e-mail válido.</span> }
       </div>
 
+      <!-- CPF E DATA DE NASCIMENTO EM DUAS COLUNAS -->
+      <div class="form-row">
+        <div class="field">
+          <label>CPF <span class="req">*</span></label>
+          <input
+            class="input"
+            [class.invalid]="field('cpf')"
+            formControlName="cpf"
+            placeholder="000.000.000-00"
+            maxlength="14"
+            (input)="onCpfInput($event)"
+          />
+          @if (field('cpf')) {
+            <span class="error-msg">Informe um CPF válido da Receita Federal.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label>Data de Nascimento <span class="req">*</span></label>
+          <input
+            class="input"
+            [class.invalid]="field('birthDate')"
+            type="date"
+            formControlName="birthDate"
+          />
+          @if (field('birthDate')) {
+            <span class="error-msg">Informe uma data de nascimento válida.</span>
+          }
+        </div>
+      </div>
+
+      <!-- TELEFONE -->
       <div class="field">
-        <label>Telefone</label>
-        <input class="input" formControlName="phone" placeholder="(11) 98765-4321" />
+        <label>Telefone / WhatsApp <span class="req">*</span></label>
+        <input
+          class="input"
+          [class.invalid]="field('phone')"
+          formControlName="phone"
+          placeholder="(11) 98765-4321"
+          maxlength="15"
+          (input)="onPhoneInput($event)"
+        />
+        @if (field('phone')) { <span class="error-msg">Informe um telefone com DDD válido.</span> }
       </div>
 
+      <!-- SENHA E CONFIRMAÇÃO -->
       <div class="form-row">
         <div class="field">
           <label>Senha <span class="req">*</span></label>
           <input class="input" [class.invalid]="field('password')" type="password" formControlName="password" placeholder="Mínimo 6 caracteres" />
-          @if (field('password')) { <span class="error-msg">Mínimo de 6 caracteres.</span> }
+          @if (field('password')) { <span class="error-msg">A senha deve conter ao menos 6 caracteres.</span> }
         </div>
         <div class="field">
-          <label>Confirmar senha <span class="req">*</span></label>
+          <label>Confirmar Senha <span class="req">*</span></label>
           <input class="input" [class.invalid]="field('confirmPassword')" type="password" formControlName="confirmPassword" placeholder="Repita a senha" />
           @if (form.errors?.['mismatch'] && form.get('confirmPassword')?.touched) {
             <span class="error-msg">As senhas não coincidem.</span>
@@ -53,15 +96,15 @@
 
       <label class="checkbox-row">
         <input type="checkbox" formControlName="terms" />
-        <span>Li e aceito os Termos de Uso e a Política de Privacidade.</span>
+        <span>Declaro que as informações acima são verdadeiras e aceito os Termos de Uso e a Política de Privacidade.</span>
       </label>
-      @if (field('terms')) { <span class="error-msg">Você precisa aceitar os termos.</span> }
+      @if (field('terms')) { <span class="error-msg">Você precisa aceitar os termos para prosseguir.</span> }
 
       <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
-        {{ submitting() ? 'Criando conta...' : 'Criar Conta e Garantir 10% OFF' }}
+        {{ submitting() ? 'Criando sua conta...' : 'Cadastrar e Ativar Cupons' }}
       </button>
     </form>
 
-    <p class="auth-switch">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+    <p class="auth-switch">Já tem uma conta cadastrada? <a routerLink="/login">Fazer Login</a></p>
   </div>
 </div>

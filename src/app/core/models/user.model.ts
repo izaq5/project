@@ -3,6 +3,8 @@ export interface User {
   name: string;
   email: string;
   phone?: string;
+  cpf?: string;
+  birthDate?: string;
   exclusiveMember: boolean; // Alias for VIP/Premium
   isVip: boolean;
   isPremium: boolean;

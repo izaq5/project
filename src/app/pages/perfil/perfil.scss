@@ -59,7 +59,26 @@
   min-width: 0;
 
   h1 { font-size: 1.3rem; margin: 0; }
-  span { font-size: .85rem; color: var(--text-muted); }
+  .user-meta-email { font-size: .85rem; color: var(--text-muted); }
+  
+  .user-meta-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 4px 0;
+
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.78rem;
+      color: #fff;
+    }
+  }
+
   .badge { margin-top: 6px; width: fit-content; }
 }
 

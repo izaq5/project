@@ -138,7 +138,7 @@ app.get('/api/health', (req, res) => {
 
 // Autenticação / Perfil
 app.post('/api/auth/register', (req, res) => {
-  const { name, email, password, wantVip } = req.body;
+  const { name, email, password, phone, cpf, birthDate, wantVip } = req.body;
   if (!email || !name) {
     return res.status(400).json({ error: 'Nome e E-mail são obrigatórios.' });
   }
@@ -148,10 +148,17 @@ app.post('/api/auth/register', (req, res) => {
     return res.status(400).json({ error: 'E-mail já cadastrado.' });
   }
 
+  if (cpf && db.users.some(u => u.cpf && u.cpf.replace(/\D/g, '') === cpf.replace(/\D/g, ''))) {
+    return res.status(400).json({ error: 'CPF já cadastrado em outra conta.' });
+  }
+
   user = {
     id: `usr_${Date.now()}`,
     name,
     email,
+    phone: phone || '',
+    cpf: cpf || '',
+    birthDate: birthDate || '',
     isVip: !!wantVip,
     isPremium: !!wantVip,
     hasMadeFirstPurchase: false,

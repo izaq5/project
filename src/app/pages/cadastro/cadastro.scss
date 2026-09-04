@@ -6,8 +6,37 @@
 
 .auth-card {
   width: 100%;
-  max-width: 460px;
+  max-width: 520px;
   padding: 36px 32px;
+}
+
+.req {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.field {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .input.invalid {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+  }
+
+  .error-msg {
+    display: block;
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 4px;
+    font-weight: 500;
+  }
 }
 
 .auth-header {

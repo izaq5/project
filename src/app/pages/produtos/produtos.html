@@ -52,6 +52,34 @@
     </aside>
 
     <div class="produtos-content">
+      @if (activeCoupon()) {
+        <div class="active-coupon-banner card">
+          <div class="acb-content">
+            <div class="acb-icon">🏷️</div>
+            <div class="acb-text">
+              <div class="acb-title">
+                <span>Cupom Ativado:</span> <code>{{ activeCoupon() }}</code>
+                @if (isHighValue()) {
+                  <span class="badge badge-vip">💎 ALTO VALOR (25% OFF)</span>
+                }
+              </div>
+              <p>
+                @if (isHighValue()) {
+                  Exibindo produtos de alto valor (a partir de R$ 2.000,00) elegíveis para o seu cupom de 25% OFF!
+                } @else if (selectedCategory()) {
+                  Exibindo produtos da categoria <strong>{{ selectedCategory() }}</strong> elegíveis para este cupom.
+                } @else {
+                  Exibindo produtos elegíveis para você aproveitar o desconto do cupom <strong>{{ activeCoupon() }}</strong>.
+                }
+              </p>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" (click)="clearCouponFilter()">
+            ✕ Limpar Filtro
+          </button>
+        </div>
+      }
+
       <div class="toolbar">
         <span>{{ filtered().length }} resultado(s)</span>
         <select class="select sort-select" [value]="sort()" (change)="setSort($any($event.target).value)">

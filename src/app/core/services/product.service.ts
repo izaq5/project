@@ -16,7 +16,7 @@ export class ProductService {
     return this._products().find((p) => p.id === id);
   }
 
-  filter(opts: { term?: string; category?: string | null; onlyExclusive?: boolean; maxPrice?: number; sort?: string }): Product[] {
+  filter(opts: { term?: string; category?: string | null; onlyExclusive?: boolean; maxPrice?: number; minPrice?: number; sort?: string }): Product[] {
     let list = this._products();
 
     if (opts.term && opts.term.trim()) {
@@ -31,6 +31,9 @@ export class ProductService {
     }
     if (opts.maxPrice) {
       list = list.filter((p) => p.price <= opts.maxPrice!);
+    }
+    if (opts.minPrice) {
+      list = list.filter((p) => p.price >= opts.minPrice!);
     }
 
     switch (opts.sort) {
